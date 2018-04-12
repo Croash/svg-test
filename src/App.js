@@ -5,7 +5,7 @@ import SvgComp from './svgComp'
 class Test extends Component {
   render() {
     return (
-      <div style = {{ width:'1000px',height:'1000px',backgroundColor:'red' }}>
+      <div style = {{ width:'1920px',height:'1000px',backgroundColor:'red' }}>
         sgsg
       </div>
     )
@@ -15,7 +15,7 @@ class Test extends Component {
 class App extends Component {
   render() {
     return (
-      <SvgComp/>
+      <SvgComp  style={{ width:'1920px' }}/>
     )
   }
 }

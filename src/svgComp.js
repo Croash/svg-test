@@ -1,5 +1,6 @@
 import React,{ Component } from 'react'
 import SVG from 'svg.js'
+import navline from './img/navline.png'
 
 const bezierFunc = (points) => {
   return `M${points[0].x} ${points[0].y} 
@@ -16,22 +17,28 @@ class SvgComp extends Component {
 
   componentDidMount() {
     const points = [
-      { x:150,y:350 },
-      { x:900 ,y:150 },
-      { x:1750,y:350 }
+      { x:250,y:350 },
+      { x:1020 ,y:270 },
+      { x:1690,y:350 }
     ]
     let draw = SVG('SvgDrawing').size(1920, 1080)
     let path = draw.path(bezierFunc(points))
+    path.attr({ stroke: 'rgba(0,0,0,0)' })
     let length = path.length()
     let input = path.pointAt(length/3)
-    console.log(length,input)
+    let image = draw.image(navline,200,200).loaded( function (loader) {
+      console.log(this)
+      this.size(loader.width, loader.height)
+    })
+    image.move(0,40)
 
-    path.fill('none').move(50, 20).stroke({ width: 1, color: '#ccc' })
+
+    path.fill('none').move(250, 40).stroke({ width: 1, color: 'rgba(0,0,0,0)' })
     
     this.index=0
     let devide = 7
     const pathArray = []
-    for(let i = 0;i<devide;i++) { 
+    for(let i = 0;i<devide;i++) {
       pathArray.push( path.pointAt( length/(devide-1)*i ) )
     }
 
@@ -57,7 +64,6 @@ class SvgComp extends Component {
       })
       draw.use(symbol).move(pos.x-50, pos.y-50)
     })
-
 
   }
   render() {
