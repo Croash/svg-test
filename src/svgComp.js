@@ -1,26 +1,63 @@
 import React,{ Component } from 'react'
 import SVG from 'svg.js'
 
+const bezierFunc = (points) => {
+  return `M${points[0].x} ${points[0].y} 
+          Q${points[1].x} ${points[1].y} 
+          ${points[2].x} ${points[2].y}`
+}
+
 class SvgComp extends Component {
+
+  constructor(props) {
+    super(props)
+    this.index = 0
+  }
+
   componentDidMount() {
-    let draw = SVG('SvgDrawing').size(300, 300)
-    let path = draw.path('M0 0 A50 50 0 0 1 50 50 A50 50 0 0 0 100 100')
+    const points = [
+      { x:150,y:350 },
+      { x:900 ,y:150 },
+      { x:1750,y:350 }
+    ]
+    let draw = SVG('SvgDrawing').size(1920, 1080)
+    let path = draw.path(bezierFunc(points))
+    let length = path.length()
+    let input = path.pointAt(length/3)
+    console.log(length,input)
 
     path.fill('none').move(50, 20).stroke({ width: 1, color: '#ccc' })
     
-    path.marker('start', 10, 10, function (add) {
-      add.circle(10).fill('#f06')
+    this.index=0
+    let devide = 7
+    const pathArray = []
+    for(let i = 0;i<devide;i++) { 
+      pathArray.push( path.pointAt( length/(devide-1)*i ) )
+    }
+
+    let circle = draw.circle(100).fill('blue').move(pathArray[0].x-50, pathArray[0].y-50)
+    circle.animate(1000).radius(75)
+    circle.click(()=>{
+      console.log('circle')
     })
-    path.marker('mid', 10, 10, function (add) {
-      add.rect(5, 10).cx(5).fill('#ccc')
+
+    pathArray.map((pos,index) => {
+      let symbol = draw.symbol()
+      symbol.rect(100, 100).fill('#f09')
+      symbol.click(()=>{
+        circle.animate(300).during((pos, morph, eased) => {
+          // const ratio = eased
+          let p = path.pointAt( ( this.index +(index-this.index)*eased)/(devide-1) * length)
+          circle.center(p.x, p.y)
+        })
+        .after(()=>{
+          this.index = index
+        })
+        
+      })
+      draw.use(symbol).move(pos.x-50, pos.y-50)
     })
-    path.marker('end', 20, 20, function (add) {
-      add.circle(6).center(4, 5)
-      add.circle(6).center(4, 15)
-      add.circle(6).center(12, 10)
-    
-      this.fill('#0f9')
-    })
+
 
   }
   render() {
