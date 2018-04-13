@@ -16,18 +16,18 @@ class SvgComp extends Component {
   }
 
   componentDidMount() {
+    console.log('son didMount',this.ref)
     const points = [
       { x:250,y:350 },
       { x:1020 ,y:270 },
       { x:1690,y:350 }
     ]
-    let draw = SVG('SvgDrawing').size(1920, 1080)
+    let draw = SVG(this.ref).size(1920, 1080)
     let path = draw.path(bezierFunc(points))
-    path.attr({ stroke: 'rgba(0,0,0,0)' })
     let length = path.length()
     let input = path.pointAt(length/3)
     let image = draw.image(navline,200,200).loaded( function (loader) {
-      console.log(this)
+      // console.log(this)
       this.size(loader.width, loader.height)
     })
     image.move(0,40)
@@ -65,9 +65,11 @@ class SvgComp extends Component {
       draw.use(symbol).move(pos.x-50, pos.y-50)
     })
 
+    console.log(SVG)
   }
   render() {
-    return(<div id="SvgDrawing"></div>)
+    console.log('son render')
+    return(<div ref={ref=>{ this.ref=ref }}></div>)
   }
 }
 
