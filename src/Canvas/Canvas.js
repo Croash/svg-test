@@ -12,14 +12,14 @@ class Canvas extends Component {
   }
 
   render() {
-    return(<div ref={ref=>{ this.ref=ref }}>
+    return(<div ref={ref=>{ this.canvas=ref }}>
       { this.state.loaded? this.renderChildren: null }
       </div>)
   }
 
   componentDidMount() {
     const { divName = 'drawing', attr = {} } = this.props
-    this.canvas = SVG.draw(this.ref).attr(attr)
+    this.canvas = SVG.draw(this.canvas).attr(attr)
     this.setState({ loaded: true })
   }
 
@@ -28,7 +28,8 @@ class Canvas extends Component {
       (child) => { 
         return React.cloneElement(child, { 
           ...this.props,
-          canvas: this.ref
+          __canvas__: this.canvas,
+          __parent__: this.canvas
         })
       } 
     )

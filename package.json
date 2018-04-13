@@ -1,18 +1,12 @@
 {
-  "name": "redux-saga-test",
+  "name": "react-svgjs",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
     "eslint-config-rackt": "^1.1.1",
     "react": "^16.2.0",
-    "react-amap": "^1.2.3",
-    "react-amapui-wrapper": "^0.0.10",
     "react-dom": "^16.2.0",
-    "react-markdown": "^3.3.0",
-    "react-redux": "^5.0.7",
     "react-scripts": "1.1.1",
-    "redux": "^3.7.2",
-    "redux-saga": "^0.16.0",
     "svg.js": "^2.6.4"
   },
   "devDependencies": {
