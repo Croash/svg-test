@@ -12,14 +12,15 @@ class Canvas extends Component {
   }
 
   render() {
-    return(<div ref={ref=>{ this.canvas=ref }}>
+    console.log(SVG)
+    return(<div ref={ref=>{ this.ref=ref }}>
       { this.state.loaded? this.renderChildren: null }
       </div>)
   }
 
   componentDidMount() {
     const { divName = 'drawing', attr = {} } = this.props
-    this.canvas = SVG.draw(this.canvas).attr(attr)
+    this.canvas = SVG(this.ref)
     this.setState({ loaded: true })
   }
 

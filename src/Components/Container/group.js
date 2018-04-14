@@ -9,13 +9,11 @@ class Group extends Component {
     if(canvas!=undefined) {
       this.Initialize()
     }
+    else console.error('this')
   }
 
-  // componentDidMount() {
-  //   const canvas 
-  // }
   Initialize() {
-    const { canvas, __parent__ } = this.props
+    const { __parent__ } = this.props
     this.parent = this.__parent__
     this.group = this.parent['group']()
   }
@@ -37,6 +35,9 @@ class Group extends Component {
     return childrenWithProps
   }
 
+  componentDidCatch(error, info) {
+    return <div>{error} : {info}</div>
+  }
 
 }
 

@@ -1,5 +1,5 @@
-import Group from './group'
+import Container from './Container'
 
 export default {
-  Group
+  ...Container
 }
