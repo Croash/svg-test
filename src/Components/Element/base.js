@@ -17,7 +17,6 @@ class Base extends Component {
   }
 
   initialInstance() {
-    console.log('const')
     const { __parent__, __parent__type__, __canvas__: canvas } = this.props
     this.instanceName = this.initName()
     // this.parent = __parent__
