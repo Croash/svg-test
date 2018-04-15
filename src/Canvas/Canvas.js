@@ -12,21 +12,18 @@ class Canvas extends Component {
   }
 
   render() {
-    console.log('render')
     return(<div ref={ref=>{ this.ref=ref }}>
       { this.state.loaded? this.renderChildren(): null }
       </div>)
   }
 
   componentDidMount() {
-    console.log('did')
     const { divName = 'drawing', attr = {} } = this.props
     this.canvas = SVG(this.ref)
     this.setState({ loaded: true })
   }
 
   componentDidUpdate() {
-    console.log('update')
   }
 
   renderChildren() {
@@ -40,7 +37,6 @@ class Canvas extends Component {
         })
       } 
     )
-    console.log(childrenWithProps)
     return childrenWithProps
   }
 

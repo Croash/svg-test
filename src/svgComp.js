@@ -30,7 +30,6 @@ class SvgComp extends Component {
     // let length = path.length()
     // let input = path.pointAt(length/3)
     // let image = draw.image(navline,200,200).loaded( function (loader) {
-    //   // console.log(this)
     //   this.size(loader.width, loader.height)
     // })
     // image.move(0,40)
@@ -48,7 +47,6 @@ class SvgComp extends Component {
     // let circle = draw.circle(100).fill('blue').move(pathArray[0].x-50, pathArray[0].y-50)
     // circle.animate(1000).radius(75)
     // circle.click(()=>{
-    //   console.log('circle')
     // })
 
     // pathArray.map((pos,index) => {
@@ -68,7 +66,6 @@ class SvgComp extends Component {
     //   draw.use(symbol).move(pos.x-50, pos.y-50)
     // })
 
-    console.log(SVG)
   }
   render() {
     console.log('son render')

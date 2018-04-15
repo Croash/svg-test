@@ -10,7 +10,6 @@ class Base extends Component {
     if (typeof window !== 'undefined') {
       if(__parent__!=undefined) {
         this.parent = __parent__
-        console.log('__parent__ defined')
         this.initialInstance()
       }
       else console.error('__parent__ undefined')
@@ -21,7 +20,6 @@ class Base extends Component {
     console.log('const')
     const { __parent__, __parent__type__, __canvas__: canvas } = this.props
     this.instanceName = this.initName()
-    console.log('sgsg')
     // this.parent = __parent__
         
     if (this[this.instanceName]) {
@@ -30,7 +28,6 @@ class Base extends Component {
       })
     } else {
       return new Promise((resolve) => {
-        console.log(this.parent)
         this[this.instanceName] = this.parent[this.instanceName]()
         // if(__parent__type__=='group')
         //   this.props.__group__.add(this[this.instanceName])
@@ -51,7 +48,6 @@ class Base extends Component {
 
   initAttr() {
     const { attr = { width : 100, height : 100, fill : 'blue' } } = this.props
-    console.log('attr')
     this[this.instanceName].attr(attr)
   }
 
