@@ -4,14 +4,17 @@ import SvgComp from './svgComp'
 
 import Canvas from './Canvas'
 import Group from './Components/Container/group'
+import Rect from './Components/Element/rect'
 
 class Test extends Component {
   render() {
     return (
       <Canvas>
-        <Group/>
+        <Group>
+          <Rect/>
+        </Group>
       </Canvas>
-    )
+    )     //   
   }
 }
 

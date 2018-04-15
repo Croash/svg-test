@@ -5,20 +5,24 @@ class Group extends Component {
 
   constructor(props) {
     super(props)
-    const { canvas } = props
-    if(canvas!=undefined) {
+    const { canvas, __parent__ } = props
+    
+    if(__parent__!=undefined) {
       this.Initialize()
     }
-    else console.error('this')
+    
+    else console.log('some thing wrong with this')
   }
 
   Initialize() {
     const { __parent__ } = this.props
-    this.parent = this.__parent__
+    this.parent = __parent__
     this.group = this.parent['group']()
   }
 
   render() {
+    this.renderChildren()
+    console.log('subrend')
     return this.renderChildren()
   }
 
@@ -28,11 +32,21 @@ class Group extends Component {
         return React.cloneElement(child, { 
           ...this.props,
           __group__: this.group,
-          __parent__: this.group
+          __parent__: this.group,
+          __parent__type__: 'group'
         })
       } 
     )
+    console.log(this.props.children,childrenWithProps)
     return childrenWithProps
+  }
+
+  componentWillReceiveProps() {
+    console.log('receiveProps')
+  }
+
+  componentDidUpdate() {
+    console.log('update')
   }
 
   componentDidCatch(error, info) {

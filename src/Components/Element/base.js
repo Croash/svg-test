@@ -6,19 +6,23 @@ class Base extends Component {
   
   constructor(props) {
     super(props)
-    const { canvas } = props
+    const { __parent__ } = props
     if (typeof window !== 'undefined') {
-      if(canvas!=undefined) {
-        this.parent = this.__parent__
+      if(__parent__!=undefined) {
+        this.parent = __parent__
+        console.log('__parent__ defined')
         this.initialInstance()
       }
-      else console.error('this')
+      else console.error('__parent__ undefined')
     }
   }
 
   initialInstance() {
-    const { __parent__ } = this.props
+    console.log('const')
+    const { __parent__, __parent__type__, __canvas__: canvas } = this.props
     this.instanceName = this.initName()
+    console.log('sgsg')
+    // this.parent = __parent__
         
     if (this[this.instanceName]) {
       return new Promise((resolve) => {
@@ -26,8 +30,11 @@ class Base extends Component {
       })
     } else {
       return new Promise((resolve) => {
-        
+        console.log(this.parent)
         this[this.instanceName] = this.parent[this.instanceName]()
+        // if(__parent__type__=='group')
+        //   this.props.__group__.add(this[this.instanceName])
+        this.initAttr()
         const events = this.exposeInstance(this.props)
         events && this.bindEvents(events)
         resolve(this[this.instanceName])
@@ -40,6 +47,12 @@ class Base extends Component {
   initName() {
     this.instanceName = 'rect'
     return this.instanceName
+  }
+
+  initAttr() {
+    const { attr = { width : 100, height : 100, fill : 'blue' } } = this.props
+    console.log('attr')
+    this[this.instanceName].attr(attr)
   }
 
   render() {
