@@ -3,9 +3,11 @@ import { BrowserRouter as Router, Link, Route, Switch, Redirect } from 'react-ro
 import SvgComp from './svgComp'
 
 import Canvas from './Canvas'
-import Group from './Components/Container/group'
-import Rect from './Components/Element/rect'
-// import { Rect } from './Components/Element'
+import Containers from './Components/Containers'
+import Elements from './Components/Elements'
+const { Group } = Containers
+const { Rect } = Elements
+// import { Rect } from './Components/Elements'
 
 class Test extends Component {
   render() {
