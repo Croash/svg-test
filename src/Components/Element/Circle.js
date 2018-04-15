@@ -3,10 +3,10 @@ import Base from './base'
 import isFun from '../utils/isFun'
 import SVG from 'svg.js'
 
-class Rect extends Base {
+class Circle extends Base {
   
   initName() {
-    this.instanceName = 'rect'
+    this.instanceName = 'circle'
     return this.instanceName
   }
 
@@ -26,4 +26,4 @@ class Rect extends Base {
 
 }
 
-export default Rect
+export default Circle

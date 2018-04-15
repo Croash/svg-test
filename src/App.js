@@ -5,13 +5,22 @@ import SvgComp from './svgComp'
 import Canvas from './Canvas'
 import Group from './Components/Container/group'
 import Rect from './Components/Element/rect'
+// import { Rect } from './Components/Element'
 
 class Test extends Component {
   render() {
+    const RectEvents = {
+      created: (rect) => {
+        console.log(rect)
+      },
+      click: (rect) => {
+        console.log('click')
+      }
+    }
     return (
       <Canvas>
         <Group>
-          <Rect/>
+          <Rect events={ RectEvents }/>
         </Group>
       </Canvas>
     )     //   

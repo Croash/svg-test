@@ -3,10 +3,10 @@ import Base from './base'
 import isFun from '../utils/isFun'
 import SVG from 'svg.js'
 
-class Rect extends Base {
+class Line extends Base {
   
   initName() {
-    this.instanceName = 'rect'
+    this.instanceName = 'line'
     return this.instanceName
   }
 
@@ -26,4 +26,4 @@ class Rect extends Base {
 
 }
 
-export default Rect
+export default Line
