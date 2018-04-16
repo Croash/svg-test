@@ -97,7 +97,6 @@ class Base extends Component {
 
   }
 
-
 }
 
 export default Base

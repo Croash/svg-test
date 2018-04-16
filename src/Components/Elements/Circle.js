@@ -15,15 +15,6 @@ class Circle extends Base {
     this[this.instanceName].attr(attr)
   }
 
-
-  render() {
-    return null
-  }
-
-  componentDidCatch(error, info) {
-    return <div>{error} : {info}</div>
-  }
-
 }
 
 export default Circle
