@@ -1,5 +1,4 @@
 import React, { Component } from 'react'
-import { BrowserRouter as Router, Link, Route, Switch, Redirect } from 'react-router-dom'
 import SvgComp from './svgComp'
 
 import Canvas from './Canvas'
@@ -25,14 +24,14 @@ class Test extends Component {
           <Rect events={ RectEvents }/>
         </Group>
       </Canvas>
-    )     //   
+    )
   }
 }
 
 class App extends Component {
   render() {
     return (
-      <Test  style={{ width:'1920px' }}/>
+      <SvgComp  style={{ width:'1920px' }}/>
     )
   }
 }

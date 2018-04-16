@@ -16,6 +16,10 @@ class Base extends Component {
     }
   }
 
+  animate({ attr = {}, config: { time = 1000 } }) {
+    this[this.instanceName].animate(time).attr(attr)
+  }
+
   initialInstance() {
     const { __parent__, __parent__type__, __canvas__: canvas } = this.props
     this.instanceName = this.initName()
@@ -58,6 +62,19 @@ class Base extends Component {
     return <div>{error} : {info}</div>
   }
 
+  // /* events list 事件列表 */
+  // click,
+  // dblclick, 
+  // mousedown, 
+  // mouseup, 
+  // mouseover, 
+  // mouseout, 
+  // mousemove, 
+  // touchstart, 
+  // touchmove, 
+  // touchleave, 
+  // touchend,
+  // touchcancel
   bindEvents(events,mapInstance) {
     const list = Object.keys(events)
     list.length && list.forEach((evName) => {

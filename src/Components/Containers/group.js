@@ -22,7 +22,6 @@ class Group extends Component {
 
   render() {
     this.renderChildren()
-    console.log('subrend')
     return this.renderChildren()
   }
 
@@ -37,16 +36,13 @@ class Group extends Component {
         })
       } 
     )
-    console.log(this.props.children,childrenWithProps)
     return childrenWithProps
   }
 
   componentWillReceiveProps() {
-    console.log('receiveProps')
   }
 
   componentDidUpdate() {
-    console.log('update')
   }
 
   componentDidCatch(error, info) {

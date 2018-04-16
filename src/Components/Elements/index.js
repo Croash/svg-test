@@ -4,7 +4,7 @@ import Image from './Image'
 import Line from './Line'
 import Path from './Path'
 import Polygon from './Polygon'
-import Rect from './rect'
+import Rect from './Rect'
 
 export default {
   Circle,
