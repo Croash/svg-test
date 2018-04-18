@@ -1,4 +1,5 @@
 import React,{ Component, Children } from 'react'
+import _ from 'lodash'
 import SVG from 'svg.js'
 
 class Canvas extends Component {
@@ -30,7 +31,7 @@ class Canvas extends Component {
     const childrenWithProps = Children.map(this.props.children,
       (child) => { 
         return React.cloneElement(child, { 
-          // ...this.props,
+          ..._.omit(this.props,[ 'children' ]),
           __canvas__: this.canvas,
           __parent__: this.canvas,
           __parent__type__: 'canvas'

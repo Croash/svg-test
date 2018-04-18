@@ -10,11 +10,6 @@ class Line extends Base {
     return this.instanceName
   }
 
-  initAttr() {
-    const { attr = { width : 100, height : 100, fill : 'blue' } } = this.props
-    this[this.instanceName].attr(attr)
-  }
-
 }
 
 export default Line

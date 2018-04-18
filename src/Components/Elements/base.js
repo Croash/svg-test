@@ -34,6 +34,7 @@ class Base extends Component {
         this[this.instanceName] = this.parent[this.instanceName]()
         // if(__parent__type__=='group')
         //   this.props.__group__.add(this[this.instanceName])
+        console.log('sgsgsggsg')
         this.initAttr()
         const events = this.exposeInstance(this.props)
         events && this.bindEvents(events)
@@ -50,8 +51,9 @@ class Base extends Component {
   }
 
   initAttr() {
-    const { attr = { width : 100, height : 100, fill : 'blue' } } = this.props
-    this[this.instanceName].attr(attr)
+    const { initAttr = { width : 100, height : 200, fill : 'blue' } } = this.props
+    console.log(initAttr)
+    this[this.instanceName].attr(initAttr)
   }
 
   render() {
@@ -78,8 +80,11 @@ class Base extends Component {
   bindEvents(events,mapInstance) {
     const list = Object.keys(events)
     list.length && list.forEach((evName) => {
-      this[this.instanceName]
-        .on(evName, events[evName])
+      let instance = this[this.instanceName]
+      instance
+        .on(evName, (param) => {
+          events[evName](param, instance)
+        })
     })
   }
 

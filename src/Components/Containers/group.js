@@ -1,4 +1,5 @@
 import React,{ Component, Children } from 'react'
+import _ from 'lodash'
 import SVG from 'svg.js'
 
 class Group extends Component {
@@ -29,7 +30,7 @@ class Group extends Component {
     const childrenWithProps = Children.map(this.props.children,
       (child) => { 
         return React.cloneElement(child, { 
-          ...this.props,
+          ..._.omit(this.props,[ 'children' ]),
           __group__: this.group,
           __parent__: this.group,
           __parent__type__: 'group'
