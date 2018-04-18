@@ -2,6 +2,16 @@ import React,{ Component, Children } from 'react'
 import isFun from '../utils/isFun'
 import SVG from 'svg.js'
 
+const situationDefault = [
+  'delay',
+  'during',
+  'loop',
+  'after'
+]
+
+const compose = (f,ins) => ins[f]
+
+
 class Base extends Component {
   
   constructor(props) {
@@ -51,9 +61,35 @@ class Base extends Component {
   }
 
   initAttr() {
-    const { initAttr = { width : 100, height : 200, fill : 'blue' } } = this.props
+    const defAttr = { width : 100, height : 200, fill : 'blue' }
+    const defAnim = { 
+      config: { time:3000, easing:'<', delay: 100 }, 
+      situation:{ during:()=>{ console.log('13') }, loop:[ 1, false ], delay:100, after:()=>{} }
+    }
+    const { initConfig : { initAttr=defAttr, initAnim } } = this.props
     console.log(initAttr)
     this[this.instanceName].attr(initAttr)
+    console.log(this[this.instanceName])
+
+    console.log(this[this.instanceName].loop)
+    this.initAnim(this[this.instanceName],defAnim)
+    
+  }
+
+  initAnim = (ins,aniConfig) => {
+    const { config={ time:3000, easing:'<', delay: 0 }, situation } = aniConfig
+    let newIns = ins
+      .animate(config.time,config.easing,config.delay)
+    situationDefault.map(sit=>{
+      if(situation[sit]!=undefined) {
+        console.log(sit,newIns[sit],situation[sit])
+        if(sit=='loop') {
+          newIns = newIns.loop(...situation[sit])
+        }
+        else newIns = newIns[sit](situation[sit])
+      }
+    })
+    
   }
 
   render() {
@@ -64,19 +100,6 @@ class Base extends Component {
     return <div>{error} : {info}</div>
   }
 
-  // /* events list 事件列表 */
-  // click,
-  // dblclick, 
-  // mousedown, 
-  // mouseup, 
-  // mouseover, 
-  // mouseout, 
-  // mousemove, 
-  // touchstart, 
-  // touchmove, 
-  // touchleave, 
-  // touchend,
-  // touchcancel
   bindEvents(events,mapInstance) {
     const list = Object.keys(events)
     list.length && list.forEach((evName) => {

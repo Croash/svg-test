@@ -41,11 +41,13 @@ class Test extends Component {
         }
       }
     }
+    const  rectConfig = { initAttr: { width : 100, height : 200, fill : 'red', x:100, y:100 } }
+    const  pathConfig = { initAttr: { d:bezierFunc(points), fill:'red' } }
     return (
       <Canvas>
         <Group>
-          <Rect events={ RectEvents } initAttr={{ width : 100, height : 200, fill : 'red', x:100, y:100 }} />
-          <Path initAttr={{ d:bezierFunc(points), fill:'red' }}/>
+          <Rect events={ RectEvents } initConfig={ rectConfig } />
+          <Path initConfig = { pathConfig }/>
         </Group>
       </Canvas>
     )
