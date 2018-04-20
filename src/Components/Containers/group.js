@@ -22,7 +22,6 @@ class Group extends Component {
   }
 
   render() {
-    this.renderChildren()
     return this.renderChildren()
   }
 

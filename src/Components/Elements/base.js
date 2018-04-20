@@ -2,15 +2,7 @@ import React,{ Component, Children } from 'react'
 import isFun from '../utils/isFun'
 import SVG from 'svg.js'
 
-const situationDefault = [
-  'delay',
-  'during',
-  'loop',
-  'after'
-]
-
-const compose = (f,ins) => ins[f]
-
+import animeLoad from '../utils/animateLoad'
 
 class Base extends Component {
   
@@ -24,10 +16,6 @@ class Base extends Component {
       }
       else console.error('__parent__ undefined')
     }
-  }
-
-  animate({ attr = {}, config: { time = 1000 } }) {
-    this[this.instanceName].animate(time).attr(attr)
   }
 
   initialInstance() {
@@ -44,7 +32,6 @@ class Base extends Component {
         this[this.instanceName] = this.parent[this.instanceName]()
         // if(__parent__type__=='group')
         //   this.props.__group__.add(this[this.instanceName])
-        console.log('sgsgsggsg')
         this.initAttr()
         const events = this.exposeInstance(this.props)
         events && this.bindEvents(events)
@@ -61,34 +48,16 @@ class Base extends Component {
   }
 
   initAttr() {
-    const defAttr = { width : 100, height : 200, fill : 'blue' }
-    const defAnim = { 
+    const defAttr = { width : 400, height : 200, fill : 'red' }
+    const defAnim = {
       config: { time:3000, easing:'<', delay: 100 }, 
-      situation:{ during:()=>{ console.log('13') }, loop:[ 1, false ], delay:100, after:()=>{} }
+      situation:{ during:()=>{ }, loop:[ 1, false ], delay:100, after:()=>{} }
     }
-    const { initConfig : { initAttr=defAttr, initAnim } } = this.props
-    console.log(initAttr)
-    this[this.instanceName].attr(initAttr)
-    console.log(this[this.instanceName])
-
-    console.log(this[this.instanceName].loop)
-    this.initAnim(this[this.instanceName],defAnim)
+    const { initConfig : { initAttr=defAttr, initAnim = defAnim } } = this.props
+    console.log('sg',initAttr,initAnim)
+    this[this.instanceName].attr(initAttr)                                                                                                              
     
-  }
-
-  initAnim = (ins,aniConfig) => {
-    const { config={ time:3000, easing:'<', delay: 0 }, situation } = aniConfig
-    let newIns = ins
-      .animate(config.time,config.easing,config.delay)
-    situationDefault.map(sit=>{
-      if(situation[sit]!=undefined) {
-        console.log(sit,newIns[sit],situation[sit])
-        if(sit=='loop') {
-          newIns = newIns.loop(...situation[sit])
-        }
-        else newIns = newIns[sit](situation[sit])
-      }
-    })
+    animeLoad(this[this.instanceName],initAnim)
     
   }
 

@@ -8,7 +8,6 @@ import Containers from './Components/Containers'
 import Elements from './Components/Elements'
 const { Group } = Containers
 const { Rect, Path, Image } = Elements
-// import { Rect } from './Components/Elements'
 
 const bezierFunc = (points) => {
   return `M${points[0].x} ${points[0].y} 
@@ -27,13 +26,12 @@ class Test extends Component {
   render() {
     const RectEvents = {
       created: (rect) => {
-        console.log(rect)
         this.rectClick = true
       },
       click: (e,ins) => {
         if(this.rectClick) {
           this.rectClick = false
-          ins.animate(1400).move(num,100).after(() => {
+          ins.animate(1400).move(num,0).after(() => {
             // do something
             num+=100
             this.rectClick = true
@@ -41,13 +39,21 @@ class Test extends Component {
         }
       }
     }
-    const  rectConfig = { initAttr: { width : 100, height : 200, fill : 'red', x:100, y:100 } }
-    const  pathConfig = { initAttr: { d:bezierFunc(points), fill:'red' } }
+
+    const PathEvents = {
+      created: (path) => {
+        console.log(this.rectClick!=undefined)
+      }
+    }
+
+    const  rectConfig = { initAttr: { width : 100, height : 200, fill : 'white', x:100, y:100 } }
+    const  pathConfig = { initAttr: { d:bezierFunc(points),  fill: { width:22, color:'red' } } }
+    const  imageConfig = {}
     return (
-      <Canvas>
+      <Canvas size={{ width:1920, height:1080 }}>
         <Group>
           <Rect events={ RectEvents } initConfig={ rectConfig } />
-          <Path initConfig = { pathConfig }/>
+          <Path events={ PathEvents } initConfig = { pathConfig }/>
         </Group>
       </Canvas>
     )
@@ -57,7 +63,7 @@ class Test extends Component {
 class App extends Component {
   render() {
     return (
-      <Test  style={{ width:'1920px' }}/>
+      <Test style={{ width:'1920px' }}/>
     )
   }
 }

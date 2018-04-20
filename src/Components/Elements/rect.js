@@ -10,11 +10,6 @@ class Rect extends Base {
     return this.instanceName
   }
 
-  initAttr() {
-    const { initAttr = { width : 100, height : 300, fill : 'blue' } } = this.props
-    this[this.instanceName].attr(initAttr)
-  }
-
 }
 
 export default Rect

@@ -19,8 +19,8 @@ class Canvas extends Component {
   }
 
   componentDidMount() {
-    const { divName = 'drawing', attr = {} } = this.props
-    this.canvas = SVG(this.ref)
+    const { divName = 'drawing', size = { width : 500, height : 300 } } = this.props
+    this.canvas = SVG(this.ref).size(size.width,size.height)
     this.setState({ loaded: true })
   }
 
