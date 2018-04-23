@@ -43,6 +43,7 @@ class Test extends Component {
     const PathEvents = {
       created: (path) => {
         console.log(this.rectClick!=undefined)
+        this.path = path
       }
     }
 
@@ -52,8 +53,8 @@ class Test extends Component {
     return (
       <Canvas size={{ width:1920, height:1080 }}>
         <Group>
-          <Rect events={ RectEvents } initConfig={ rectConfig } />
           <Path events={ PathEvents } initConfig = { pathConfig }/>
+          <Rect events={ RectEvents } initConfig={ rectConfig } />
         </Group>
       </Canvas>
     )
