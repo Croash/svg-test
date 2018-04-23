@@ -7,7 +7,7 @@ import Canvas from './Canvas'
 import Containers from './Components/Containers'
 import Elements from './Components/Elements'
 const { Group } = Containers
-const { Rect, Path, Image } = Elements
+const { Rect, Path, Image, Circle } = Elements
 
 const bezierFunc = (points) => {
   return `M${points[0].x} ${points[0].y} 
@@ -23,6 +23,19 @@ const points = [
 
 let num = 100
 class Test extends Component {
+
+  constructor(props) {
+    super(props)
+    this.index = 0
+    this.state = {
+      pathInit: false
+    }
+  }
+
+  componentDidMount() {
+    console.log('did')
+  }
+
   render() {
     const RectEvents = {
       created: (rect) => {
@@ -42,19 +55,40 @@ class Test extends Component {
 
     const PathEvents = {
       created: (path) => {
-        console.log(this.rectClick!=undefined)
         this.path = path
+        this.setState({
+          pathInit: true
+        })
+        console.log(this.path)
       }
     }
 
-    const  rectConfig = { initAttr: { width : 100, height : 200, fill : 'white', x:100, y:100 } }
-    const  pathConfig = { initAttr: { d:bezierFunc(points),  fill: { width:22, color:'red' } } }
-    const  imageConfig = {}
+    
+    const pathConfig = { initAttr: { plot:bezierFunc(points),  fill: { width:22, color:'red' } } }
+    const imageConfig = { initAttr: {  } }
+    let rectConfig = {}
+    const rectConfigArr = []
+    const devide = 7
+    console.log(this.path)
+    if(this.path!=undefined) {
+      const length = this.path.length()
+      const rectPos = this.path.pointAt(0/(devide-1)*length)
+      rectConfig = { initAttr: { size:[ 100,100 ], fill : 'blue', center: [ rectPos.x,rectPos.y ] } }
+      for(let i=0;i<devide;i++) {
+        const pos = this.path.pointAt(i/(devide-1)*length)
+        console.log(this.path.pointAt(i/(devide-1)*length),devide,i)
+        rectConfigArr.push({
+          initAttr: { center: [ pos.x, pos.y ], size:[ 100,100 ], fill : 'white' }
+        })
+      } 
+    }
     return (
       <Canvas size={{ width:1920, height:1080 }}>
         <Group>
           <Path events={ PathEvents } initConfig = { pathConfig }/>
-          <Rect events={ RectEvents } initConfig={ rectConfig } />
+          
+          { rectConfigArr.map((rConfig,i)=><Rect initConfig={ rConfig } events={{ created:()=>{ console.log(i) } }}/>) }
+          { this.path!=undefined ? <Rect events={ RectEvents } initConfig={ rectConfig } /> : null }
         </Group>
       </Canvas>
     )

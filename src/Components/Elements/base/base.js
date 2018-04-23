@@ -1,8 +1,9 @@
 import React,{ Component, Children } from 'react'
-import isFun from '../utils/isFun'
+import isFun from '../../utils/isFun'
 import SVG from 'svg.js'
 
-import animeLoad from '../utils/animateLoad'
+import animeLoad from '../../utils/animateLoad'
+import attrLoad from '../../utils/attrLoad'
 
 class Base extends Component {
   
@@ -54,11 +55,9 @@ class Base extends Component {
       situation:{ during:()=>{ }, loop:[ 1, false ], delay:100, after:()=>{} }
     }
     const { initConfig : { initAttr=defAttr, initAnim = defAnim } } = this.props
-    console.log('sg',initAttr,initAnim)
-    this[this.instanceName].attr(initAttr)                                                                                                              
     
+    attrLoad( this[this.instanceName],initAttr )                                                                                                          
     animeLoad(this[this.instanceName],initAnim)
-    
   }
 
   render() {

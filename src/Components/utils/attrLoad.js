@@ -7,26 +7,38 @@ const situationDefault = [
   'stroke',
   'load',
   'size',
-  'width'
+  'center',
+  'width',
+  'clear',
+  'move'
 ]
 
-let animeLoad = (situationDefault) => (ins,attrConfig) => {
-  const { config={ time:5000, easing:'<', delay: 0, attr:{} }, situation } = attrConfig
+let attrLoad = (sitList) => (ins,attrConfig) => {
+  const situation = attrConfig
   let newIns = ins
 
-  situationDefault.map(sit=>{
+  sitList.map(sit=>{
     if(situation[sit]!=undefined) {
-      if(sit=='size') {
-        if(Array.isArray(situation[sit])&&situation[sit].length==2)
-          newIns = newIns.size(...situation[sit])
-        else console.log('size should be a array with 2 parameters')
+      if(sit=='size'||sit=='move'||sit=='center') {
+        if(Array.isArray(situation[sit])&&situation[sit].length==2) {
+          newIns[sit](...situation[sit])
+        }
+        else console.log(`${sit} should be a array with 2 parameters`)
       }
-      else 
-      newIns = newIns[sit](situation[sit])
+      else if(sit=='path')
+        newIns.d(situation[sit])
+      else if(sit=='clear'||sit=='move') {
+        console.log('sgsgsg',sit)
+        newIns[sit]()
+        
+        return newIns
+      }
+
+      else newIns[sit](situation[sit])
     }
   })
 
   return newIns
 }
 
-export default animeLoad(situationDefault)
+export default attrLoad(situationDefault)
