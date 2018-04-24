@@ -1,13 +1,12 @@
 import React, { Component } from 'react'
 import SvgComp from './svgComp'
-
-import navline from './img/navline.png'
-
-import Canvas from './Canvas'
 import Containers from './Components/Containers'
 import Elements from './Components/Elements'
-const { Group } = Containers
+import navline from './img/navline.png'
+import TestDemo from './TestDemo'
+const { Canvas, Group } = Containers
 const { Rect, Path, Image, Circle } = Elements
+
 
 const bezierFunc = (points) => {
   return `M${points[0].x} ${points[0].y} 
@@ -36,6 +35,15 @@ class Test extends Component {
     console.log('did')
   }
 
+  PathEvents = {
+    created: (path) => {
+      this.path = path
+      this.setState({
+        pathInit: true
+      })
+      console.log('created')
+    }
+  }
   render() {
     const RectEvents = {
       created: (rect) => {
@@ -53,17 +61,7 @@ class Test extends Component {
       }
     }
 
-    const PathEvents = {
-      created: (path) => {
-        this.path = path
-        this.setState({
-          pathInit: true
-        })
-        console.log(this.path)
-      }
-    }
-
-    
+    console.log('render')
     const pathConfig = { initAttr: { plot:bezierFunc(points),  fill: { width:22, color:'red' } } }
     const imageConfig = { initAttr: {  } }
     let rectConfig = {}
@@ -84,8 +82,9 @@ class Test extends Component {
     }
     return (
       <Canvas size={{ width:1920, height:1080 }}>
+        <Path events={ this.PathEvents } initConfig = { pathConfig }/>
         <Group>
-          <Path events={ PathEvents } initConfig = { pathConfig }/>
+          
           
           { rectConfigArr.map((rConfig,i)=><Rect initConfig={ rConfig } events={{ created:()=>{ console.log(i) } }}/>) }
           { this.path!=undefined ? <Rect events={ RectEvents } initConfig={ rectConfig } /> : null }
@@ -98,7 +97,7 @@ class Test extends Component {
 class App extends Component {
   render() {
     return (
-      <Test style={{ width:'1920px' }}/>
+      <TestDemo style={{ width:'1920px' }}/>
     )
   }
 }

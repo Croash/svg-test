@@ -30,13 +30,13 @@ class Canvas extends Component {
   renderChildren() {
     const childrenWithProps = Children.map(this.props.children,
       (child) => { 
-        return React.cloneElement(child, { 
+        return child!=null?React.cloneElement(child, { 
           ..._.omit(this.props,[ 'children' ]),
           __canvas__: this.canvas,
           __parent__: this.canvas,
           __parent__type__: 'canvas'
-        })
-      } 
+        }):null
+      }
     )
     return childrenWithProps
   }

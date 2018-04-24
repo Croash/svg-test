@@ -1,5 +1,7 @@
 const situationDefault = [
   // 'delay',
+  'clear',
+  'move',
   'path',
   'radius',
   'plot',
@@ -8,9 +10,7 @@ const situationDefault = [
   'load',
   'size',
   'center',
-  'width',
-  'clear',
-  'move'
+  'width'
 ]
 
 let attrLoad = (sitList) => (ins,attrConfig) => {
@@ -28,9 +28,7 @@ let attrLoad = (sitList) => (ins,attrConfig) => {
       else if(sit=='path')
         newIns.d(situation[sit])
       else if(sit=='clear'||sit=='move') {
-        console.log('sgsgsg',sit)
         newIns[sit]()
-        
         return newIns
       }
 
