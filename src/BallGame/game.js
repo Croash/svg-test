@@ -28,10 +28,11 @@ class BallGame extends Component {
   render() {
 
     const backgroundConfig = { initAttr:{ size:[ canvasWidth, canvasHeight ], fill: '#dde3e1' } }
-
+    const lineConfig = { initAttr:{ plot:[ canvasWidth/2, 0, canvasWidth/2, canvasHeight ], stroke:{ width: 5, color: '#fff', dasharray: '5,5' } } }
     return (
       <Canvas size={{ width:canvasWidth, height:canvasHeight }}>
         <Rect name={'background'} initConfig = { backgroundConfig }/>
+        <Line name={'centerLine'} initConfig={lineConfig}/>
       </Canvas>
     )
   }
