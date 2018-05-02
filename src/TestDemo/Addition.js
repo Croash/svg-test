@@ -40,10 +40,14 @@ class Addition extends Component {
     let imgArr = []
     if(this.rect!=undefined) {
       eventsArr = posArr.map((pos,index)=>({
-        click:()=>{ console.log(this.rect)
-          this.rect.animate(300).during((pos, morph, eased) => {
-            let p = this.path.pointAt( ( this.index +(index-this.index)*eased)/(devide-1) * length)
+        click:()=>{ 
+          // console.log(this.rect)
+          this.rect.animate(300).rotate('auto').during((pos, morph, eased) => {
+            const inputLength = ( this.index +(index-this.index)*eased)/(devide-1) * length
+            let p = this.path.pointAt(inputLength)
+            console.log(this.rect.transform())
             this.rect.center(p.x, p.y)
+            this.rect.transform({ rotation:45 })
           })
           .after(()=>{
             this.index = index

@@ -1,5 +1,5 @@
 import Canvas from './Canvas'
-import Group from './group'
+import Group from './Group'
 
 export default {
   Canvas,
