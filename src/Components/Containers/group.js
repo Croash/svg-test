@@ -29,7 +29,7 @@ class Group extends Component {
     const childrenWithProps = Children.map(this.props.children,
       (child) => { 
         return child!=null ? React.cloneElement(child, { 
-          ..._.omit(this.props,[ 'children' ]),
+          ..._.omit(this.props,[ 'children', 'events' ]),
           __group__: this.group,
           __parent__: this.group,
           __parent__type__: 'group'

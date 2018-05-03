@@ -33,6 +33,8 @@ class Base extends Component {
       return new Promise((resolve) => {
         this[this.instanceName] = this.parent[this.instanceName]()
         this.initAttr()
+        const events = this.exposeInstance(this.props)
+        events && this.bindEvents(events)
         resolve(this[this.instanceName])
       })
     }
@@ -78,7 +80,9 @@ class Base extends Component {
   exposeInstance() {
     if ('events' in this.props) {
       const events = this.props.events || {}
+      console.log(this.props.events)
       if (isFun(events.created)) {
+        console.log(this[this.instanceName])
         events.created(this[this.instanceName],this.instanceName)
         delete events.created
       }
@@ -88,8 +92,6 @@ class Base extends Component {
   }
 
   componentDidMount() {
-    const events = this.exposeInstance(this.props)
-    events && this.bindEvents(events)
   }
 
 }
