@@ -11,7 +11,7 @@ const { Rect, Path, Image, Circle } = Elements
 class App extends Component {
   render() {
     return (
-      <BallGame style={{ width:'1920px' }}/>
+      <TestDemo style={{ width:'1920px' }}/>
     )
   }
 }

@@ -47,7 +47,6 @@ class Addition extends Component {
             let p = this.path.pointAt(inputLength)
             console.log(this.rect.transform())
             this.rect.center(p.x, p.y)
-            this.rect.transform({ rotation:45 })
           })
           .after(()=>{
             this.index = index

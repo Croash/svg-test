@@ -93,7 +93,7 @@ class BallGame extends Component {
   bindEvents = () => {
     // this.canvas
     SVG.on(document, 'keydown', (e) => {
-      num.paddleDirection = e.keyCode == 40 ? 1 : e.keyCode == 38 ? -1 : 0
+      num.paddleDirection = e.keyCode == 83 ? 1 : e.keyCode == 87 ? -1 : 0
       e.preventDefault()
     })
 
