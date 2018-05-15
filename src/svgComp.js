@@ -51,14 +51,16 @@ class SvgComp extends Component {
       // symbol.rect(100, 100).fill('#f09')
       rect.center(pos.x,pos.y)
       rect.click(()=>{
-        circle.animate(300).during((pos, morph, eased) => {
-          // const ratio = eased
-          let p = path.pointAt( ( this.index +(index-this.index)*eased)/(devide-1) * length)
-          circle.center(p.x, p.y)
-        })
-        .after(()=>{
-          this.index = index
-        })
+        circle
+          .animate(300)
+          .during((pos, morph, eased) => {
+            // const ratio = eased
+            let p = path.pointAt( ( this.index +(index-this.index)*eased)/(devide-1) * length)
+            circle.center(p.x, p.y)
+          })
+          .after(()=>{
+            this.index = index
+          })
         
       })
     })

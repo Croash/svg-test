@@ -68,8 +68,8 @@ class Base extends Component {
 
   bindEvents(events,mapInstance) {
     const list = Object.keys(events)
+    let instance = this[this.instanceName]
     list.length && list.forEach((evName) => {
-      let instance = this[this.instanceName]
       instance
         .on(evName, (param) => {
           events[evName](param, instance)
@@ -80,9 +80,8 @@ class Base extends Component {
   exposeInstance() {
     if ('events' in this.props) {
       const events = this.props.events || {}
-      console.log(this.props.events)
       if (isFun(events.created)) {
-        console.log(this[this.instanceName])
+        console.log(`${this.instanceName} created`)
         events.created(this[this.instanceName],this.instanceName)
         delete events.created
       }
