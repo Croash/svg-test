@@ -24,7 +24,7 @@ class Addition extends Component {
   }
 
   render() {
-    const devide = 7
+    const { devide = 7 } = this.props
     const length = this.path.length()
     const rectPos = this.path.pointAt(0/(devide-1)*length)
     const rectConfig = { initAttr: { size:[ 100,100 ], fill : 'blue', center: [ rectPos.x,rectPos.y ] } }
