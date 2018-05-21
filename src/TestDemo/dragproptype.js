@@ -172,7 +172,12 @@ import SVG from 'svg.js'
       if(this.el instanceof SVG.G) {
       // what i need to do is change this one
         // this.el.matrix(this.startPoints.transform).transform({x:gx, y: gy}, true)
-        this.el.fire('customdrag',{ transform: this.startPoints.transform, x:gx, y:gy })
+        this.el.fire('customdrag',{ 
+          matrix: this.startPoints.transform, 
+          transform: { x:gx, y:gy }, 
+          end:{ x:p.x, y: p.y }, 
+          start:{ x:this.startPoints.point.x, y:this.startPoints.point.y } 
+        })
       }
       else
         this.el.move(x, y)

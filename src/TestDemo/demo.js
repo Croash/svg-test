@@ -1,10 +1,15 @@
 import React, { Component } from 'react'
+import SVG from 'svg.js'
 import './dragproptype.js'
 import Containers from '../Components/Containers'
 import Elements from '../Components/Elements'
 import Addition from './Addition'
 import navline from '../img/navline.png'
 
+
+// x: transformX, y: transformY
+// 
+//
 const { Canvas, Group } = Containers
 const { Rect, Path, Image, Circle } = Elements
 
@@ -30,6 +35,8 @@ class GComp extends Component {
       pathInit: false,
       groupInit: false
     }
+    this.circleCenter = [ 970, 6540 ]
+    this.r = 6500
   }
 
   PathEvents = {
@@ -44,7 +51,7 @@ class GComp extends Component {
   GroupEvents = {
     created: (group) => {
       this.group = group
-      // this.group.rotate(12)
+      // this.group.rotate(30)
       this.groupCenter = []
       this.group.draggable()
     },
@@ -52,15 +59,33 @@ class GComp extends Component {
       console.log('sg')
     },
     dragstart: (e,ins) => {
-      
       console.log('start')
+      this.__rotate__ = 0
+      this.__points__ = null
     },
     dragmove: (e,ins) => {
+
     },
     customdrag: (e,ins) => {
-      console.log(e.detail)
+      const{ transform, start, end } = e.detail
+      if(!this.__points__) 
+        this.__points__ = { ...start }
+      const center = this.circleCenter
+      const vectorS = { x: this.__points__.x - this.circleCenter[0], y: this.__points__.y - this.circleCenter[1] },
+        vectorE = { x: end.x - this.circleCenter[0], y: end.y - this.circleCenter[1] }
+      const devider = Math.sqrt((vectorE.x*vectorE.x+vectorE.y*vectorE.y)*(vectorS.x*vectorS.x+vectorS.y*vectorS.y))
+      let cosinput = (vectorE.x*vectorS.x+vectorE.y*vectorS.y)/devider
+      const arccos = Math.acos(cosinput)
+      let sininput = (-vectorE.x*vectorS.y+vectorS.x*vectorE.y)/devider
+      const arcsin = Math.asin(sininput)
+      console.log(arccos,arcsin,/* ,arcsin, */)
+      let matrix = new SVG.Matrix()
+      sininput>0? this.__rotate__ += arccos*50 : this.__rotate__ -= arccos*50
+      ins.matrix(e.detail.matrix).transform(matrix.rotate(this.__rotate__,...this.circleCenter), true)
+      this.__points__ = { ...end }
     },
     dragend: (e,ins) => {
+      this.__points__ = null
       console.log('end')
     }
   }
