@@ -6,13 +6,8 @@ import Elements from '../Components/Elements'
 import Addition from './Addition'
 import navline from '../img/navline.png'
 
-
-// x: transformX, y: transformY
-// 
-//
 const { Canvas, Group } = Containers
 const { Rect, Path, Image, Circle } = Elements
-
 
 const bezierFunc = (points) => {
   return `M${points[0].x} ${points[0].y} 
@@ -38,7 +33,9 @@ class GComp extends Component {
     this.circleCenter = [ 970, 6540 ]
     this.r = 6500
   }
+  componentDidMount() {
 
+  }
   PathEvents = {
     created: (path) => {
       this.path = path
@@ -56,7 +53,6 @@ class GComp extends Component {
       this.group.draggable()
     },
     beforedrag: (e) => {
-      console.log('sg')
     },
     dragstart: (e,ins) => {
       console.log('start')
@@ -78,10 +74,27 @@ class GComp extends Component {
       const arccos = Math.acos(cosinput)
       let sininput = (-vectorE.x*vectorS.y+vectorS.x*vectorE.y)/devider
       const arcsin = Math.asin(sininput)
-      console.log(arccos,arcsin,/* ,arcsin, */)
+      // console.log(arccos,arcsin)
+      // console.log(this.imgIns)
       let matrix = new SVG.Matrix()
-      sininput>0? this.__rotate__ += arccos*50 : this.__rotate__ -= arccos*50
+      sininput>0? this.__rotate__ += arccos*57 : this.__rotate__ -= arccos*57
       ins.matrix(e.detail.matrix).transform(matrix.rotate(this.__rotate__,...this.circleCenter), true)
+      this.imgIns.map(img=>{
+        const matrixImg = new SVG.Matrix()
+        img.matrix(matrix).transform(matrixImg.rotate(-this.__rotate__,img.attr().x+25.5,img.attr().y+25.5), true)
+      })
+      // this.rectIns.map(rect=>{
+      //   const matrixImg = new SVG.Matrix()
+      //   console.log(rect.attr())
+      //   rect.matrix(matrixImg).transform(matrixImg.rotate(-this.__rotate__,rect.attr().x+rect.attr().width/2,rect.attr().y+rect.attr().width/2), true)
+      // })
+      this.rectPicIns.map(rect=>{
+        const matrixIn = rect.attr().transform
+        // let matrixImg = matrixIn.toString().indexOf('NaN')>=0 ? new SVG.Matrix() : matrixIn
+        let matrixImg = new SVG.Matrix()
+        console.log(rect.attr().transform,matrixImg)
+        rect.matrix(matrixIn).transform(matrixImg.rotate(-this.__rotate__,rect.attr().x+rect.attr().width/2,rect.attr().y+rect.attr().width/2), true)
+      })
       this.__points__ = { ...end }
     },
     dragend: (e,ins) => {
@@ -96,7 +109,23 @@ class GComp extends Component {
     return (
       <Group __parent__= {this.props.__parent__} events = {this.GroupEvents}>
         <Path events={ this.PathEvents } initConfig = { pathConfig } />
-        { this.path!=undefined?<Addition {...this.props} path={this.path}/>:null }
+        { this.path!=undefined?<Addition {...this.props} path={this.path} events={{ created:(insObj)=>{
+          this.imgIns=insObj.imgIns
+          this.rectIns=insObj.rectIns
+          this.rectPicIns=insObj.rectPicIns
+          this.rectIns.map(rect=>{
+            let matrix = new SVG.Matrix({ a: 1, b: 0, c: 0, d: 1, e: 0, f: 0 })
+            rect.matrix(matrix).transform(matrix.rotate(1),true)
+          })
+          this.imgIns.map(img=>{
+            let matrix = new SVG.Matrix({ a: 1, b: 0, c: 0, d: 1, e: 0, f: 0 })
+            img.matrix(matrix).transform(matrix.rotate(1),true)
+          })
+          this.rectPicIns.map(rect=>{
+            let matrix = new SVG.Matrix({ a: 1, b: 0, c: 0, d: 1, e: 0, f: 0 })
+            rect.matrix(matrix).transform(matrix.rotate(1),true)
+          })
+        } }}  />:null }
       </Group>
     )
   }
@@ -107,7 +136,7 @@ class Test extends Component {
     const imageConfig = { initAttr: { load: navline, move: [ 0,40 ] } }
     return (
       <Canvas size={{ width:1920, height:1080 }}>
-        <Image initConfig = { imageConfig }/>
+        <Image initConfig = { imageConfig } />
         <GComp/>
       </Canvas>
     )

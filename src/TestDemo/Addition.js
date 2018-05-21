@@ -13,11 +13,15 @@ class Addition extends Component {
     this.state = {
       rectInit: false
     }
+    this.imgIns = []
+    this.rectIns = []
+    this.rectPicIns = []
   }
 
   RectEvents = {
     created: (rect) => {
       this.rect = rect
+      this.rectPicIns.push(this.rect)
       this.rectClick = true
       this.setState({ rectInit: true })
     }
@@ -41,6 +45,7 @@ class Addition extends Component {
     let imgArr = []
     if(this.rect!=undefined) {
       eventsArr = posArr.map((pos,index)=>({
+        created:(ins)=>{ this.rectIns.push(ins) },
         click:(e,ins)=>{ 
           this.rect.animate(300).rotate('auto').during((pos, morph, eased) => {
             const inputLength = ( this.index +(index-this.index)*eased)/(devide-1) * length
@@ -57,9 +62,14 @@ class Addition extends Component {
     return (<Group __parent__= {this.props.__parent__} >
       <Rect events={ this.RectEvents } initConfig={ rectConfig }/>
       
-      { this.rect!=undefined ? imgArr.map((imgConfig,i)=><Image initConfig={ imgConfig }/> ) : null }
+      { this.rect!=undefined ? imgArr.map((imgConfig,i)=><Image initConfig={ imgConfig } events={{ created:(ins)=>{ this.imgIns.push(ins) } }}/> ) : null }
       { this.rect!=undefined ? rectConfigArr.map((r,i)=>(<Rect initConfig={ r } events={ eventsArr[i] }/>)) : null }
     </Group>)
+  }  
+  
+  componentDidMount() {
+    if(this.props.events&&this.props.events.created)
+      this.props.events.created({ imgIns:this.imgIns, rectIns: this.rectIns, rectPicIns: this.rectPicIns })
   }
 }
 
