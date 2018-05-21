@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import 'svg.draggable.js'
+import './dragproptype.js'
 import Containers from '../Components/Containers'
 import Elements from '../Components/Elements'
 import Addition from './Addition'
@@ -44,19 +44,21 @@ class GComp extends Component {
   GroupEvents = {
     created: (group) => {
       this.group = group
-      // this.setState({ groupInit:true })
-      console.log('cr')
+      // this.group.rotate(12)
+      this.groupCenter = []
       this.group.draggable()
     },
     beforedrag: (e) => {
-      // e.preventDefault()
       console.log('sg')
     },
     dragstart: (e,ins) => {
+      
       console.log('start')
     },
     dragmove: (e,ins) => {
-      console.log('move process')
+    },
+    customdrag: (e,ins) => {
+      console.log(e.detail)
     },
     dragend: (e,ins) => {
       console.log('end')

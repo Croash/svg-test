@@ -34,6 +34,7 @@ class Addition extends Component {
       const pos = this.path.pointAt(i/(devide-1)*length)
       posArr.push(pos)
     }
+    console.log(posArr)
 
     const rectConfigArr = posArr.map(p=>({ initAttr: { center: [ p.x, p.y ], size:[ 80,80 ], fill : 'rgba(0,0,0,0)', stroke: { color: 'white', width: 2 } } }))
     let eventsArr = []
@@ -41,11 +42,9 @@ class Addition extends Component {
     if(this.rect!=undefined) {
       eventsArr = posArr.map((pos,index)=>({
         click:(e,ins)=>{ 
-          // console.log(e,ins)
           this.rect.animate(300).rotate('auto').during((pos, morph, eased) => {
             const inputLength = ( this.index +(index-this.index)*eased)/(devide-1) * length
             let p = this.path.pointAt(inputLength)
-            // console.log(this.rect.transform())
             this.rect.center(p.x, p.y)
           })
           .after(()=>{
