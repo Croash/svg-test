@@ -57,13 +57,11 @@ class GComp extends Component {
         this.rectInsMatrix[index] = rect.transform()
       })
       this.rectPicIns.map((rect,index)=>{
-        console.log(this.rectPicInsMatrix,rect.transform())
         this.rectPicInsMatrix[index] = rect.transform()
       })
       this.imgIns.map((img,index)=>{
         this.imgInsMatrix[index] = img.transform()
       })
-      console.log(this.rectInsMatrix)
     },
     dragstart: (e,ins) => {
       console.log('start')
@@ -98,13 +96,14 @@ class GComp extends Component {
       })
       this.rectPicIns.map((rect,index)=>{
         const matrixRect = this.rectPicInsMatrix[index]/* new SVG.Matrix() */
+        console.log(rect.attr())
         rect.matrix(matrixRect).transform(matrix.rotate(-this.__rotate__,rect.attr().x+rect.attr().width/2,rect.attr().y+rect.attr().width/2), true)
       })
       this.__points__ = { ...end }
     },
     dragend: (e,ins) => {
       this.__points__ = null
-      console.log('end')
+      console.log('end'/* ,ins.transform() */,this.rectInsMatrix[0])
     }
   }
 
