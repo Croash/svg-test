@@ -53,6 +53,17 @@ class GComp extends Component {
       this.group.draggable()
     },
     beforedrag: (e) => {
+      this.rectIns.map((rect,index)=>{
+        this.rectInsMatrix[index] = rect.transform()
+      })
+      this.rectPicIns.map((rect,index)=>{
+        console.log(this.rectPicInsMatrix,rect.transform())
+        this.rectPicInsMatrix[index] = rect.transform()
+      })
+      this.imgIns.map((img,index)=>{
+        this.imgInsMatrix[index] = img.transform()
+      })
+      console.log(this.rectInsMatrix)
     },
     dragstart: (e,ins) => {
       console.log('start')
@@ -74,26 +85,20 @@ class GComp extends Component {
       const arccos = Math.acos(cosinput)
       let sininput = (-vectorE.x*vectorS.y+vectorS.x*vectorE.y)/devider
       const arcsin = Math.asin(sininput)
-      // console.log(arccos,arcsin)
-      // console.log(this.imgIns)
       let matrix = new SVG.Matrix()
       sininput>0? this.__rotate__ += arccos*57 : this.__rotate__ -= arccos*57
       ins.matrix(e.detail.matrix).transform(matrix.rotate(this.__rotate__,...this.circleCenter), true)
-      this.imgIns.map(img=>{
-        const matrixImg = new SVG.Matrix()
-        img.matrix(matrix).transform(matrixImg.rotate(-this.__rotate__,img.attr().x+25.5,img.attr().y+25.5), true)
+      this.imgIns.map((img,index)=>{
+        const matrixImg = this.imgInsMatrix[index]
+        img.matrix(matrixImg).transform(matrix.rotate(-this.__rotate__,img.attr().x+25.5,img.attr().y+25.5), true)
       })
-      // this.rectIns.map(rect=>{
-      //   const matrixImg = new SVG.Matrix()
-      //   console.log(rect.attr())
-      //   rect.matrix(matrixImg).transform(matrixImg.rotate(-this.__rotate__,rect.attr().x+rect.attr().width/2,rect.attr().y+rect.attr().width/2), true)
-      // })
-      this.rectPicIns.map(rect=>{
-        const matrixIn = rect.attr().transform
-        // let matrixImg = matrixIn.toString().indexOf('NaN')>=0 ? new SVG.Matrix() : matrixIn
-        let matrixImg = new SVG.Matrix()
-        console.log(rect.attr().transform,matrixImg)
-        rect.matrix(matrixIn).transform(matrixImg.rotate(-this.__rotate__,rect.attr().x+rect.attr().width/2,rect.attr().y+rect.attr().width/2), true)
+      this.rectIns.map((rect,index)=>{
+        const matrixRect = this.rectInsMatrix[index]/* new SVG.Matrix() */
+        rect.matrix(matrixRect).transform(matrix.rotate(-this.__rotate__,rect.attr().x+rect.attr().width/2,rect.attr().y+rect.attr().width/2), true)
+      })
+      this.rectPicIns.map((rect,index)=>{
+        const matrixRect = this.rectPicInsMatrix[index]/* new SVG.Matrix() */
+        rect.matrix(matrixRect).transform(matrix.rotate(-this.__rotate__,rect.attr().x+rect.attr().width/2,rect.attr().y+rect.attr().width/2), true)
       })
       this.__points__ = { ...end }
     },
@@ -113,17 +118,17 @@ class GComp extends Component {
           this.imgIns=insObj.imgIns
           this.rectIns=insObj.rectIns
           this.rectPicIns=insObj.rectPicIns
-          this.rectIns.map(rect=>{
-            let matrix = new SVG.Matrix({ a: 1, b: 0, c: 0, d: 1, e: 0, f: 0 })
-            rect.matrix(matrix).transform(matrix.rotate(1),true)
+          this.imgInsMatrix = []
+          this.rectInsMatrix = []
+          this.rectPicInsMatrix = []
+          this.rectIns.map((rect,index)=>{
+            this.rectInsMatrix[index] = rect.transform()
           })
-          this.imgIns.map(img=>{
-            let matrix = new SVG.Matrix({ a: 1, b: 0, c: 0, d: 1, e: 0, f: 0 })
-            img.matrix(matrix).transform(matrix.rotate(1),true)
+          this.imgIns.map((img,index)=>{
+            this.imgInsMatrix[index] = img.transform()
           })
-          this.rectPicIns.map(rect=>{
-            let matrix = new SVG.Matrix({ a: 1, b: 0, c: 0, d: 1, e: 0, f: 0 })
-            rect.matrix(matrix).transform(matrix.rotate(1),true)
+          this.rectPicIns.map((rect,index)=>{
+            this.rectPicInsMatrix[index] = rect.transform()
           })
         } }}  />:null }
       </Group>
