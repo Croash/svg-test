@@ -38,7 +38,8 @@ class GComp extends Component {
   }
   PathEvents = {
     created: (path) => {
-      this.path = path
+      // it used to be this.path = path, test now
+      this.path = path.clone()
       this.setState({
         pathInit: true
       })
@@ -48,7 +49,6 @@ class GComp extends Component {
   GroupEvents = {
     created: (group) => {
       this.group = group
-      // this.group.rotate(30)
       this.groupCenter = []
       this.group.draggable()
     },
@@ -86,6 +86,9 @@ class GComp extends Component {
       let matrix = new SVG.Matrix()
       sininput>0? this.__rotate__ += arccos*57 : this.__rotate__ -= arccos*57
       ins.matrix(e.detail.matrix).transform(matrix.rotate(this.__rotate__,...this.circleCenter), true)
+
+      // this.path.matrix(e.detail.matrix).transform(matrix.rotate(this.__rotate__,...this.circleCenter), true)
+
       this.imgIns.map((img,index)=>{
         const matrixImg = this.imgInsMatrix[index]
         img.matrix(matrixImg).transform(matrix.rotate(-this.__rotate__,img.attr().x+25.5,img.attr().y+25.5), true)
@@ -97,7 +100,7 @@ class GComp extends Component {
       this.rectPicIns.map((rect,index)=>{
         const matrixRect = this.rectPicInsMatrix[index]/* new SVG.Matrix() */
         console.log(rect.attr())
-        rect.matrix(matrixRect).transform(matrix.rotate(-this.__rotate__,rect.attr().x+rect.attr().width/2,rect.attr().y+rect.attr().width/2), true)
+        // rect.matrix(matrixRect).transform(matrix.rotate(-this.__rotate__,rect.attr().x+rect.attr().width/2,rect.attr().y+rect.attr().width/2), true)
       })
       this.__points__ = { ...end }
     },

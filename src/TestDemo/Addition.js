@@ -47,7 +47,7 @@ class Addition extends Component {
       eventsArr = posArr.map((pos,index)=>({
         created:(ins)=>{ this.rectIns.push(ins) },
         click:(e,ins)=>{ 
-          console.log(this.path.transform(),e)
+          console.log(this.path.transform(),this.path.pointAt(12))
           this.rect.animate(300).rotate('auto').during((pos, morph, eased) => {
             const inputLength = ( this.index +(index-this.index)*eased)/(devide-1) * length
             let p = this.path.pointAt(inputLength)
