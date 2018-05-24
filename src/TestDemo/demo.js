@@ -1,8 +1,8 @@
 import React, { Component } from 'react'
 import SVG from 'svg.js'
 import './dragproptype.js'
-import Containers from '../Components/Containers'
-import Elements from '../Components/Elements'
+import { Containers, Elements } from 'react-svg.js'
+// import Elements from '../Components/Elements'
 import Addition from './Addition'
 import navline from '../img/navline.png'
 
