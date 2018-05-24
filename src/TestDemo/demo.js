@@ -97,16 +97,16 @@ class GComp extends Component {
         const matrixRect = this.rectInsMatrix[index]/* new SVG.Matrix() */
         rect.matrix(matrixRect).transform(matrix.rotate(-this.__rotate__,rect.attr().x+rect.attr().width/2,rect.attr().y+rect.attr().width/2), true)
       })
+      // console.log(this.rectInsMatrix[0])
       this.rectPicIns.map((rect,index)=>{
         const matrixRect = this.rectPicInsMatrix[index]/* new SVG.Matrix() */
-        console.log(rect.attr())
-        // rect.matrix(matrixRect).transform(matrix.rotate(-this.__rotate__,rect.attr().x+rect.attr().width/2,rect.attr().y+rect.attr().width/2), true)
+        // rect.matrix(matrixRect).transform(matrix.rotate(-this.__rotate__,rect.attr().cx()/* +rect.attr().width/2 */,rect.attr().cy/* +rect.attr().width/2 */), true)
       })
       this.__points__ = { ...end }
     },
     dragend: (e,ins) => {
       this.__points__ = null
-      console.log('end'/* ,ins.transform() */,this.rectInsMatrix[0])
+      console.log('end'/* ,ins.transform() */)
     }
   }
 
