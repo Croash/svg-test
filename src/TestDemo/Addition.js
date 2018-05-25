@@ -1,21 +1,17 @@
 import React, { Component } from 'react'
 import SVG from 'svg.js'
-import { Containers,Elements } from 'react-svg.js' 
+import { Containers,Elements } from 'react-svg.js'
+import utils from './utils'
+import * as glMatrix from 'gl-matrix'
 import Dot from '../img/navdot.png'
+const { angle } = utils
 const { Group } = Containers
 const { Rect, Path, Image, Circle, Ellipse } = Elements
 
 const rotateCal = (circleCenter,startPoint,endPoint) => {
   const vectorS = { x: startPoint.x - circleCenter[0], y: startPoint.y - circleCenter[1] },
     vectorE = { x: endPoint.x - circleCenter[0], y: endPoint.y - circleCenter[1] }
-  const devider = Math.sqrt((vectorE.x*vectorE.x+vectorE.y*vectorE.y)*(vectorS.x*vectorS.x+vectorS.y*vectorS.y))
-  let cosinput = (vectorE.x*vectorS.x+vectorE.y*vectorS.y)/devider
-  const arccos = Math.acos(cosinput)
-  let sininput = (-vectorE.x*vectorS.y+vectorS.x*vectorE.y)/devider
-  const arcsin = Math.asin(sininput)
-
-  const PIDevider = 180/Math.PI
-  return sininput>0? arccos*PIDevider : -arccos*PIDevider
+  return angle(vectorS,vectorE)
 }
 
 class Addition extends Component {

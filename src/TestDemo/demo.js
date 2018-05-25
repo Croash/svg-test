@@ -2,7 +2,6 @@ import React, { Component } from 'react'
 import SVG from 'svg.js'
 import './dragproptype.js'
 import { Containers, Elements } from 'react-svg.js'
-// import Elements from '../Components/Elements'
 import Addition from './Addition'
 import navline from '../img/navline.png'
 
@@ -83,8 +82,9 @@ class GComp extends Component {
       const arccos = Math.acos(cosinput)
       let sininput = (-vectorE.x*vectorS.y+vectorS.x*vectorE.y)/devider
       const arcsin = Math.asin(sininput)
-      let matrix = new SVG.Matrix()
       sininput>0? this.__rotate__ += arccos*57 : this.__rotate__ -= arccos*57
+      let matrix = new SVG.Matrix()
+
       ins.matrix(e.detail.matrix).transform(matrix.rotate(this.__rotate__,...this.circleCenter), true)
 
       // this.path.matrix(e.detail.matrix).transform(matrix.rotate(this.__rotate__,...this.circleCenter), true)
