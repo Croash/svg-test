@@ -1,9 +1,8 @@
 import React, { Component } from 'react'
 import SVG from 'svg.js'
 import { Containers,Elements } from 'react-svg.js'
-import utils from './utils'
-import * as glMatrix from 'gl-matrix'
 import Dot from '../img/navdot.png'
+import utils from './utils'
 const { angle } = utils
 const { Group } = Containers
 const { Rect, Path, Image, Circle, Ellipse } = Elements
@@ -64,11 +63,11 @@ class Addition extends Component {
         created:(ins)=>{ this.rectIns.push(ins) },
         click:(e,ins)=>{
           let angle = 0
-          console.log(this.rect.attr())
+          let increaseAngle = 0
+          // console.log(this.rect.attr())
           let startLen = ( this.index +(index-this.index)*0)/(devide-1) * length
           let startPoint = this.path.pointAt(startLen)
-
-          if(this.clickAble)
+          if(this.clickAble/* &&window.__dragClick__ */)
             this.rect
               .animate(300)
               // .rotate('auto')
@@ -79,6 +78,7 @@ class Addition extends Component {
                 let p = this.path.pointAt(inputLength)
                 const matrix = new SVG.Matrix()
                 angle = rotateCal(this.circleCenter,startPoint,p)
+                increaseAngle += angle
                 this.rect
                   .matrix(rectMatrix)
                   .transform(
@@ -89,6 +89,7 @@ class Addition extends Component {
               })
             .after(()=>{
               this.clickAble = true
+              // console.log(increaseAngle)
               this.index = index
             })
         }
@@ -106,7 +107,7 @@ class Addition extends Component {
   componentDidMount() {
     setTimeout(() => {
       this.clickAble = true
-    }, 5000)
+    }, 4000)
     if(this.props.events&&this.props.events.created)
       this.props.events.created({ imgIns:this.imgIns, rectIns: this.rectIns, rectPicIns: this.rectPicIns })
   }

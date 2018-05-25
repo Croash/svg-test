@@ -4,9 +4,11 @@ import './dragproptype.js'
 import { Containers, Elements } from 'react-svg.js'
 import Addition from './Addition'
 import navline from '../img/navline.png'
-
+import utils from './utils'
+const { angle } = utils
 const { Canvas, Group } = Containers
 const { Rect, Path, Image, Circle } = Elements
+const singleAngle = 2.120077582553386
 
 const bezierFunc = (points) => {
   return `M${points[0].x} ${points[0].y} 
@@ -19,6 +21,12 @@ const points = [
   { x:1020 ,y:0 },
   { x:1690,y:80 }
 ]
+
+const rotateCal = (circleCenter,startPoint,endPoint) => {
+  const vectorS = { x: startPoint.x - circleCenter[0], y: startPoint.y - circleCenter[1] },
+    vectorE = { x: endPoint.x - circleCenter[0], y: endPoint.y - circleCenter[1] }
+  return angle(vectorS,vectorE)
+}
 
 class GComp extends Component {
 
@@ -50,8 +58,10 @@ class GComp extends Component {
       this.group = group
       this.groupCenter = []
       this.group.draggable()
+      // window.__dragClick__ = false
     },
     beforedrag: (e) => {
+      // window.__dragClick__ = false
       this.rectIns.map((rect,index)=>{
         this.rectInsMatrix[index] = rect.transform()
       })
@@ -71,43 +81,60 @@ class GComp extends Component {
 
     },
     customdrag: (e,ins) => {
-      const{ transform, start, end } = e.detail
+      const{ start, end } = e.detail
       if(!this.__points__) 
         this.__points__ = { ...start }
-      const center = this.circleCenter
       const vectorS = { x: this.__points__.x - this.circleCenter[0], y: this.__points__.y - this.circleCenter[1] },
         vectorE = { x: end.x - this.circleCenter[0], y: end.y - this.circleCenter[1] }
-      const devider = Math.sqrt((vectorE.x*vectorE.x+vectorE.y*vectorE.y)*(vectorS.x*vectorS.x+vectorS.y*vectorS.y))
-      let cosinput = (vectorE.x*vectorS.x+vectorE.y*vectorS.y)/devider
-      const arccos = Math.acos(cosinput)
-      let sininput = (-vectorE.x*vectorS.y+vectorS.x*vectorE.y)/devider
-      const arcsin = Math.asin(sininput)
-      sininput>0? this.__rotate__ += arccos*57 : this.__rotate__ -= arccos*57
-      let matrix = new SVG.Matrix()
+      this.__rotate__ += angle(vectorS,vectorE)
+      
+      if(3*singleAngle<Math.abs(this.__rotate__))
+        this.__rotate__ = this.__rotate__/Math.abs(this.__rotate__)*3*singleAngle
 
-      ins.matrix(e.detail.matrix).transform(matrix.rotate(this.__rotate__,...this.circleCenter), true)
-
-      // this.path.matrix(e.detail.matrix).transform(matrix.rotate(this.__rotate__,...this.circleCenter), true)
-
-      this.imgIns.map((img,index)=>{
-        const matrixImg = this.imgInsMatrix[index]
-        img.matrix(matrixImg).transform(matrix.rotate(-this.__rotate__,img.attr().x+25.5,img.attr().y+25.5), true)
-      })
-      this.rectIns.map((rect,index)=>{
-        const matrixRect = this.rectInsMatrix[index]/* new SVG.Matrix() */
-        rect.matrix(matrixRect).transform(matrix.rotate(-this.__rotate__,rect.attr().x+rect.attr().width/2,rect.attr().y+rect.attr().width/2), true)
-      })
-      // console.log(this.rectInsMatrix[0])
-      this.rectPicIns.map((rect,index)=>{
-        const matrixRect = this.rectPicInsMatrix[index]/* new SVG.Matrix() */
-        // rect.matrix(matrixRect).transform(matrix.rotate(-this.__rotate__,rect.attr().cx()/* +rect.attr().width/2 */,rect.attr().cy/* +rect.attr().width/2 */), true)
-      })
+      this.CustomRotate(e,ins,this.__rotate__,this.imgIns,this.rectIns,this.rectPicIns,this.imgInsMatrix,this.rectInsMatrix,this.rectPicInsMatrix)
       this.__points__ = { ...end }
     },
     dragend: (e,ins) => {
+      let left = this.__rotate__-Math.round(this.__rotate__/singleAngle)*singleAngle
+      this.path.animate(600)
+        .during((pos, morph, eased) => {  
+          this.CustomRotate(e,ins,this.__rotate__-left*eased,this.imgIns,this.rectIns,this.rectPicIns,this.imgInsMatrix,this.rectInsMatrix,this.rectPicInsMatrix)
+        })
+        .after(()=>{
+          let matrix = new SVG.Matrix()
+          this.CustomRotate(e,ins,0,this.imgIns,this.rectIns,this.rectPicIns,this.imgInsMatrix,this.rectInsMatrix,this.rectPicInsMatrix)
+          // const matrixRect = this.rectPicIns[0].transform(matrix.rotate(this.__rotate__-left,...this.circleCenter), true)
+          // window.__dragClick__ = true
+        })
+      
       this.__points__ = null
-      console.log('end'/* ,ins.transform() */)
+      // window.__dragClick__ = true
+      console.log('end')
     }
+  }
+
+  // imgIns = this.imgIns ,
+  // rectIns = this.rectIns,
+  // rectPicIns = this.rectPicIns 
+  // imgInsMatrix = this.imgInsMatrix,
+  // rectInsMatrix = this.rectInsMatrix,
+  // rectPicInsMatrix = this.rectPicInsMatrix
+  CustomRotate = (e,ins,rotateAngle,imgIns,rectIns,rectPicIns,imgInsMatrix,rectInsMatrix,rectPicInsMatrix) => {
+    let matrix = new SVG.Matrix()
+    ins.matrix(e.detail.matrix).transform(matrix.rotate(rotateAngle,...this.circleCenter), true)
+
+    imgIns.map((img,index)=>{
+      const matrixImg = imgInsMatrix[index]
+      img.matrix(matrixImg).transform(matrix.rotate(-rotateAngle,img.attr().x+25.5,img.attr().y+25.5), true)
+    })
+    rectIns.map((rect,index)=>{
+      const matrixRect = rectInsMatrix[index]/* new SVG.Matrix() */
+      rect.matrix(matrixRect).transform(matrix.rotate(-rotateAngle,rect.attr().x+rect.attr().width/2,rect.attr().y+rect.attr().width/2), true)
+    })
+    rectPicIns.map((rect,index)=>{
+      const matrixRect = rectPicInsMatrix[index]/* new SVG.Matrix() */
+      // rect.matrix(matrixRect).transform(matrix.rotate(-this.__rotate__,rect.attr().cx()/* +rect.attr().width/2 */,rect.attr().cy/* +rect.attr().width/2 */), true)
+    })
   }
 
   render() {
