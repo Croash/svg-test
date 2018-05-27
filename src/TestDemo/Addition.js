@@ -1,11 +1,13 @@
 import React, { Component } from 'react'
 import SVG from 'svg.js'
 import { Containers,Elements } from 'react-svg.js'
-import Dot from '../img/navdot.png'
+import Dot from './img/navdot.png'
 import utils from './utils'
-const { angle } = utils
+import { vec2 } from 'gl-matrix'
+const { angle, vec2GetPoint } = utils
 const { Group } = Containers
 const { Rect, Path, Image, Circle, Ellipse } = Elements
+const singleAngle = 2.120077582553386
 
 const rotateCal = (circleCenter,startPoint,endPoint) => {
   const vectorS = { x: startPoint.x - circleCenter[0], y: startPoint.y - circleCenter[1] },
@@ -49,12 +51,20 @@ class Addition extends Component {
       } 
     }
     
+    let pathInitPos = this.path.pointAt(0)
+    let matrixPos = new SVG.Matrix()
     const posArr = []
     for(let i=0;i<devide;i++) {
-      const pos = this.path.pointAt(i/(devide-1)*length)
+      // const pos = this.path.pointAt(i/(devide-1)*length)
+      const pos = vec2GetPoint(matrixPos.rotate(singleAngle*i,...this.circleCenter), [ pathInitPos.x, pathInitPos.y ] )
       posArr.push(pos)
     }
 
+
+    console.log(
+      posArr[1],
+      vec2GetPoint(matrixPos.rotate(singleAngle,...this.circleCenter), [ posArr[0].x, posArr[0].y ] )
+    )
     const rectConfigArr = posArr.map(p=>({ initAttr: { center: [ p.x, p.y ], size:[ 80,80 ], fill : 'rgba(0,0,0,0)', stroke: { color: 'white', width: 2 } } }))
     let eventsArr = []
     let imgArr = []
@@ -67,10 +77,9 @@ class Addition extends Component {
           // console.log(this.rect.attr())
           let startLen = ( this.index +(index-this.index)*0)/(devide-1) * length
           let startPoint = this.path.pointAt(startLen)
-          if(this.clickAble&&window.__dragClick__)
+          if(this.clickAble/* &&window.__dragClick__ */)
             this.rect
               .animate(300)
-              // .rotate('auto')
               .during((pos, morph, eased) => {  
                 this.clickAble = false
                 const rectMatrix = this.rect.transform()
@@ -84,12 +93,10 @@ class Addition extends Component {
                   .transform(
                     matrix.rotate(angle,...this.circleCenter),
                     true )
-                  // .center(p.x, p.y)
                 startPoint = p
               })
             .after(()=>{
               this.clickAble = true
-              // console.log(increaseAngle)
               this.index = index
             })
         }

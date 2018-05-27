@@ -3,9 +3,9 @@ import SVG from 'svg.js'
 import './dragproptype.js'
 import { Containers, Elements } from 'react-svg.js'
 import Addition from './Addition'
-import navline from '../img/navline.png'
+import navline from './img/navline.png'
 import utils from './utils'
-const { angle } = utils
+const { angle/* , vec2GetPoint */ } = utils
 const { Canvas, Group } = Containers
 const { Rect, Path, Image, Circle } = Elements
 const singleAngle = 2.120077582553386
@@ -170,7 +170,7 @@ class Test extends Component {
   render() {
     const imageConfig = { initAttr: { load: navline, move: [ 0,40 ] } }
     return (
-      <Canvas size={{ width:1920, height:1080 }}>
+      <Canvas size={{ width:1920, height:280 }}>
         <Image initConfig = { imageConfig } />
         <GComp/>
       </Canvas>
