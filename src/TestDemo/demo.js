@@ -58,7 +58,7 @@ class GComp extends Component {
       this.group = group
       this.groupCenter = []
       this.group.draggable()
-      // window.__dragClick__ = false
+      window.__dragClick__ = false
     },
     beforedrag: (e) => {
       // window.__dragClick__ = false
@@ -81,6 +81,7 @@ class GComp extends Component {
 
     },
     customdrag: (e,ins) => {
+      window.__dragClick__ = false
       const{ start, end } = e.detail
       if(!this.__points__) 
         this.__points__ = { ...start }
@@ -104,7 +105,7 @@ class GComp extends Component {
           let matrix = new SVG.Matrix()
           this.CustomRotate(e,ins,0,this.imgIns,this.rectIns,this.rectPicIns,this.imgInsMatrix,this.rectInsMatrix,this.rectPicInsMatrix)
           // const matrixRect = this.rectPicIns[0].transform(matrix.rotate(this.__rotate__-left,...this.circleCenter), true)
-          // window.__dragClick__ = true
+          window.__dragClick__ = true
         })
       
       this.__points__ = null

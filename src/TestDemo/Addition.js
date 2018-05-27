@@ -67,7 +67,7 @@ class Addition extends Component {
           // console.log(this.rect.attr())
           let startLen = ( this.index +(index-this.index)*0)/(devide-1) * length
           let startPoint = this.path.pointAt(startLen)
-          if(this.clickAble/* &&window.__dragClick__ */)
+          if(this.clickAble&&window.__dragClick__)
             this.rect
               .animate(300)
               // .rotate('auto')
