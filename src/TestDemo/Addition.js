@@ -59,12 +59,6 @@ class Addition extends Component {
       const pos = vec2GetPoint(matrixPos.rotate(singleAngle*i,...this.circleCenter), [ pathInitPos.x, pathInitPos.y ] )
       posArr.push(pos)
     }
-
-
-    console.log(
-      posArr[1],
-      vec2GetPoint(matrixPos.rotate(singleAngle,...this.circleCenter), [ posArr[0].x, posArr[0].y ] )
-    )
     const rectConfigArr = posArr.map(p=>({ initAttr: { center: [ p.x, p.y ], size:[ 80,80 ], fill : 'rgba(0,0,0,0)', stroke: { color: 'white', width: 2 } } }))
     let eventsArr = []
     let imgArr = []
@@ -115,8 +109,38 @@ class Addition extends Component {
     setTimeout(() => {
       this.clickAble = true
     }, 4000)
+    //expose imgIns rectIns and PicIns
     if(this.props.events&&this.props.events.created)
       this.props.events.created({ imgIns:this.imgIns, rectIns: this.rectIns, rectPicIns: this.rectPicIns })
+  }
+}
+
+class MoveIcon extends Component {
+  constructor(props) {
+    super(props)
+    this.path = props.path
+    this.__parent__ = props.__parent__
+  }
+
+  RectEvents = {
+    created: (rect) => {
+      this.rect = rect
+      this.rectPicIns.push(this.rect)
+      this.rectClick = true
+      this.setState({ rectInit: true })
+    }
+  }
+
+  render() {
+    const rectPos = this.path.pointAt(0)
+    const rectConfig = { 
+      initAttr: { 
+        size:[ 100,100 ], 
+        fill : 'blue', 
+        center: [ rectPos.x,rectPos.y ] 
+      } 
+    }
+    return <Ellipse __parent__ = { this.__parent__ } events={ this.RectEvents } initConfig={ rectConfig }/>
   }
 }
 

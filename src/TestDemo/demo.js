@@ -46,7 +46,7 @@ class GComp extends Component {
   PathEvents = {
     created: (path) => {
       // it used to be this.path = path, test now
-      this.path = path.clone()
+      this.path = path
       this.setState({
         pathInit: true
       })
@@ -142,25 +142,27 @@ class GComp extends Component {
     const pathConfig = { initAttr: { plot:bezierFunc(points), stroke: { width:6, color:'red' } } }
 
     return (
-      <Group __parent__= {this.props.__parent__} events = {this.GroupEvents}>
-        <Path events={ this.PathEvents } initConfig = { pathConfig } />
-        { this.path!=undefined?<Addition {...this.props} path={this.path} events={{ created:(insObj)=>{
-          this.imgIns=insObj.imgIns
-          this.rectIns=insObj.rectIns
-          this.rectPicIns=insObj.rectPicIns
-          this.imgInsMatrix = []
-          this.rectInsMatrix = []
-          this.rectPicInsMatrix = []
-          this.rectIns.map((rect,index)=>{
-            this.rectInsMatrix[index] = rect.transform()
-          })
-          this.imgIns.map((img,index)=>{
-            this.imgInsMatrix[index] = img.transform()
-          })
-          this.rectPicIns.map((rect,index)=>{
-            this.rectPicInsMatrix[index] = rect.transform()
-          })
-        } }}  />:null }
+      <Group __parent__= {this.props.__parent__}>
+        <Group  events = {this.GroupEvents}>
+          <Path events={ this.PathEvents } initConfig = { pathConfig } />
+          { this.path!=undefined?<Addition {...this.props} path={this.path} events={{ created:(insObj)=>{
+            this.imgIns=insObj.imgIns
+            this.rectIns=insObj.rectIns
+            this.rectPicIns=insObj.rectPicIns
+            this.imgInsMatrix = []
+            this.rectInsMatrix = []
+            this.rectPicInsMatrix = []
+            this.rectIns.map((rect,index)=>{
+              this.rectInsMatrix[index] = rect.transform()
+            })
+            this.imgIns.map((img,index)=>{
+              this.imgInsMatrix[index] = img.transform()
+            })
+            this.rectPicIns.map((rect,index)=>{
+              this.rectPicInsMatrix[index] = rect.transform()
+            })
+          } }}  />:null }
+        </Group>
       </Group>
     )
   }
