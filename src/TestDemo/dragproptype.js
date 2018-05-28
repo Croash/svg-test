@@ -52,7 +52,6 @@ import SVG from 'svg.js'
           return
       }
     }
-  
     var _this = this
 
     // fire beforedrag event

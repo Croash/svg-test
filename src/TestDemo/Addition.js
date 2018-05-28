@@ -27,17 +27,17 @@ class Addition extends Component {
     this.rectIns = []
     this.rectPicIns = []
     this.circleCenter = [ 970, 6540 ]
+    this.rect = props.rect
     this.clickAble = false
   }
 
-  RectEvents = {
-    created: (rect) => {
-      this.rect = rect
-      this.rectPicIns.push(this.rect)
-      this.rectClick = true
-      this.setState({ rectInit: true })
-    }
-  }
+  // RectEvents = {
+  //   created: (rect) => {
+  //     this.rect = rect
+  //     this.rectPicIns.push(this.rect)
+  //     this.setState({ rectInit: true })
+  //   }
+  // }
 
   render() {
     const { devide = 7 } = this.props
@@ -55,7 +55,6 @@ class Addition extends Component {
     let matrixPos = new SVG.Matrix()
     const posArr = []
     for(let i=0;i<devide;i++) {
-      // const pos = this.path.pointAt(i/(devide-1)*length)
       const pos = vec2GetPoint(matrixPos.rotate(singleAngle*i,...this.circleCenter), [ pathInitPos.x, pathInitPos.y ] )
       posArr.push(pos)
     }
@@ -71,7 +70,8 @@ class Addition extends Component {
           // console.log(this.rect.attr())
           let startLen = ( this.index +(index-this.index)*0)/(devide-1) * length
           let startPoint = this.path.pointAt(startLen)
-          if(this.clickAble/* &&window.__dragClick__ */)
+          console.log('gg',window.__btnClickable__)
+          if(this.clickAble&&window.__btnClickable__/* &&window.__dragClick__ */)
             this.rect
               .animate(300)
               .during((pos, morph, eased) => {  
@@ -90,6 +90,7 @@ class Addition extends Component {
                 startPoint = p
               })
             .after(()=>{
+              console.log('ggclick',window.__btnClickable__)
               this.clickAble = true
               this.index = index
             })
@@ -98,7 +99,6 @@ class Addition extends Component {
       imgArr = posArr.map((p,index)=>({ initAttr: { center: [ p.x-26, p.y-26 ], fill : 'rgba(0,0,0,0)', load: Dot } }))
     }
     return (<Group __parent__= {this.props.__parent__} >
-      <Ellipse events={ this.RectEvents } initConfig={ rectConfig }/>
       
       { this.rect!=undefined ? imgArr.map((imgConfig,i)=><Image initConfig={ imgConfig } events={{ created:(ins)=>{ this.imgIns.push(ins) } }}/> ) : null }
       { this.rect!=undefined ? rectConfigArr.map((r,i)=>(<Rect initConfig={ r } events={ eventsArr[i] }/>)) : null }
@@ -126,7 +126,6 @@ class MoveIcon extends Component {
     created: (rect) => {
       this.rect = rect
       this.rectPicIns.push(this.rect)
-      this.rectClick = true
       this.setState({ rectInit: true })
     }
   }

@@ -7,7 +7,7 @@ import navline from './img/navline.png'
 import utils from './utils'
 const { angle/* , vec2GetPoint */ } = utils
 const { Canvas, Group } = Containers
-const { Rect, Path, Image, Circle } = Elements
+const { Rect, Path, Image, Circle, Ellipse } = Elements
 const singleAngle = 2.120077582553386
 
 const bezierFunc = (points) => {
@@ -58,59 +58,75 @@ class GComp extends Component {
       this.group = group
       this.groupCenter = []
       this.group.draggable()
-      window.__dragClick__ = false
+      this.dragable = true
+      window.__btnClickable__ = false
+      this.__dragMove__ = 0
+      this.__rotate__ = 0
     },
     beforedrag: (e) => {
-      // window.__dragClick__ = false
-      this.rectIns.map((rect,index)=>{
-        this.rectInsMatrix[index] = rect.transform()
-      })
-      this.rectPicIns.map((rect,index)=>{
-        this.rectPicInsMatrix[index] = rect.transform()
-      })
-      this.imgIns.map((img,index)=>{
-        this.imgInsMatrix[index] = img.transform()
-      })
+      // window.__btnClickable__ = false
+      if(this.__dragMove__ == 0&&this.dragable) {
+        this.rectIns.map((rect,index)=>{
+          this.rectInsMatrix[index] = rect.transform()
+        })
+        this.rectPicIns.map((rect,index)=>{
+          this.rectPicInsMatrix[index] = rect.transform()
+        })
+        this.imgIns.map((img,index)=>{
+          this.imgInsMatrix[index] = img.transform()
+        })
+        this.__rotate__ = 0
+      }
     },
     dragstart: (e,ins) => {
-      console.log('start')
-      this.__rotate__ = 0
+      // console.log('start',this.dragable)
       this.__points__ = null
+      // this.dragable = true
     },
     dragmove: (e,ins) => {
 
+      ++this.__dragMove__
+      if(this.__dragMove__>1) 
+        window.__btnClickable__ = false
     },
     customdrag: (e,ins) => {
-      window.__dragClick__ = false
       const{ start, end } = e.detail
-      if(!this.__points__) 
-        this.__points__ = { ...start }
-      const vectorS = { x: this.__points__.x - this.circleCenter[0], y: this.__points__.y - this.circleCenter[1] },
-        vectorE = { x: end.x - this.circleCenter[0], y: end.y - this.circleCenter[1] }
-      this.__rotate__ += angle(vectorS,vectorE)
-      
-      if(3*singleAngle<Math.abs(this.__rotate__))
-        this.__rotate__ = this.__rotate__/Math.abs(this.__rotate__)*3*singleAngle
+      if(this.__dragMove__ > 1 && this.dragable ) {
+        if(!this.__points__) 
+          this.__points__ = { ...start }
+        const vectorS = { x: this.__points__.x - this.circleCenter[0], y: this.__points__.y - this.circleCenter[1] },
+          vectorE = { x: end.x - this.circleCenter[0], y: end.y - this.circleCenter[1] }
+        this.__rotate__ += angle(vectorS,vectorE)
+        
+        if(3*singleAngle<Math.abs(this.__rotate__))
+          this.__rotate__ = this.__rotate__/Math.abs(this.__rotate__)*3*singleAngle
 
-      this.CustomRotate(e,ins,this.__rotate__,this.imgIns,this.rectIns,this.rectPicIns,this.imgInsMatrix,this.rectInsMatrix,this.rectPicInsMatrix)
-      this.__points__ = { ...end }
+        this.CustomRotate(e,ins,this.__rotate__,this.imgIns,this.rectIns,this.rectPicIns,this.imgInsMatrix,this.rectInsMatrix,this.rectPicInsMatrix)
+        this.__points__ = { ...end }
+      }
     },
     dragend: (e,ins) => {
       let left = this.__rotate__-Math.round(this.__rotate__/singleAngle)*singleAngle
-      this.path.animate(600)
-        .during((pos, morph, eased) => {  
-          this.CustomRotate(e,ins,this.__rotate__-left*eased,this.imgIns,this.rectIns,this.rectPicIns,this.imgInsMatrix,this.rectInsMatrix,this.rectPicInsMatrix)
-        })
-        .after(()=>{
-          let matrix = new SVG.Matrix()
-          this.CustomRotate(e,ins,0,this.imgIns,this.rectIns,this.rectPicIns,this.imgInsMatrix,this.rectInsMatrix,this.rectPicInsMatrix)
-          // const matrixRect = this.rectPicIns[0].transform(matrix.rotate(this.__rotate__-left,...this.circleCenter), true)
-          window.__dragClick__ = true
-        })
       
+      if(this.dragable)
+        this.path.animate(600)
+          .during((pos, morph, eased) => {  
+            this.CustomRotate(e,ins,this.__rotate__-left*eased,this.imgIns,this.rectIns,this.rectPicIns,this.imgInsMatrix,this.rectInsMatrix,this.rectPicInsMatrix)
+          })
+          .after(()=>{
+            let matrix = new SVG.Matrix()
+            this.CustomRotate(e,ins,0,this.imgIns,this.rectIns,this.rectPicIns,this.imgInsMatrix,this.rectInsMatrix,this.rectPicInsMatrix)
+            // const matrixRect = this.rectPicIns[0].transform(matrix.rotate(this.__rotate__-left,...this.circleCenter), true)
+            setTimeout(() => {
+              this.dragable = true
+              this.__dragMove__ = 0
+              window.__btnClickable__ = true
+            }, 500)
+          })
+      this.dragable = false
       this.__points__ = null
-      // window.__dragClick__ = true
-      console.log('end')
+      // window.__btnClickable__ = true
+      // console.log('end')
     }
   }
 
@@ -143,28 +159,65 @@ class GComp extends Component {
 
     return (
       <Group __parent__= {this.props.__parent__}>
+        { this.path!=undefined? <MoveIcon path={ this.path } events = {{ created:(MoveIcon) => { this.MoveIcon = MoveIcon; this.setState({ MoveIcon:true }) } }}/>:null }
         <Group  events = {this.GroupEvents}>
           <Path events={ this.PathEvents } initConfig = { pathConfig } />
-          { this.path!=undefined?<Addition {...this.props} path={this.path} events={{ created:(insObj)=>{
-            this.imgIns=insObj.imgIns
-            this.rectIns=insObj.rectIns
-            this.rectPicIns=insObj.rectPicIns
-            this.imgInsMatrix = []
-            this.rectInsMatrix = []
-            this.rectPicInsMatrix = []
-            this.rectIns.map((rect,index)=>{
-              this.rectInsMatrix[index] = rect.transform()
-            })
-            this.imgIns.map((img,index)=>{
-              this.imgInsMatrix[index] = img.transform()
-            })
-            this.rectPicIns.map((rect,index)=>{
-              this.rectPicInsMatrix[index] = rect.transform()
-            })
-          } }}  />:null }
+          { (this.path!=undefined&&this.MoveIcon!=undefined) ? <Addition {...this.props} path={this.path} 
+              events={{ created:(insObj)=>{
+                this.imgIns=insObj.imgIns
+                this.rectIns=insObj.rectIns
+                this.rectPicIns=insObj.rectPicIns
+                this.imgInsMatrix = []
+                this.rectInsMatrix = []
+                this.rectPicInsMatrix = []
+                this.rectIns.map((rect,index)=>{
+                  this.rectInsMatrix[index] = rect.transform()
+                })
+                this.imgIns.map((img,index)=>{
+                  this.imgInsMatrix[index] = img.transform()
+                })
+                this.rectPicIns.map((rect,index)=>{
+                  this.rectPicInsMatrix[index] = rect.transform()
+                })
+              } }}
+              rect = { this.MoveIcon }
+            />:null }
         </Group>
       </Group>
     )
+  }
+}
+
+
+class MoveIcon extends Component {
+  constructor(props) {
+    super(props)
+    this.path = props.path
+    this.__parent__ = props.__parent__
+  }
+
+  RectEvents = {
+    created: (rect) => {
+      this.rect = rect
+      this.rectClick = true
+    }
+  }
+
+  componentDidMount() {
+    if(this.props.events&&this.props.events.created)
+      this.props.events.created(this.rect)
+  }
+
+  render() {
+    const rectPos = this.path.pointAt(0)
+    const rectConfig = { 
+      initAttr: { 
+        size:[ 100,100 ], 
+        fill : 'blue', 
+        center: [ rectPos.x,rectPos.y ] 
+      } 
+    }
+    return <Ellipse __parent__ = { this.__parent__ } events={ this.RectEvents } initConfig={ rectConfig }/>
   }
 }
 
