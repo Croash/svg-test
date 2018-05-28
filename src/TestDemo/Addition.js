@@ -31,13 +31,13 @@ class Addition extends Component {
     this.clickAble = false
   }
 
-  // RectEvents = {
-  //   created: (rect) => {
-  //     this.rect = rect
-  //     this.rectPicIns.push(this.rect)
-  //     this.setState({ rectInit: true })
-  //   }
-  // }
+  RectEvents = {
+    created: (rect) => {
+      this.rect = rect
+      this.rectPicIns.push(this.rect)
+      this.setState({ rectInit: true })
+    }
+  }
 
   render() {
     const { devide = 7 } = this.props
@@ -74,7 +74,7 @@ class Addition extends Component {
           if(this.clickAble&&window.__btnClickable__/* &&window.__dragClick__ */)
             this.rect
               .animate(300)
-              .during((pos, morph, eased) => {  
+              .during((pos, morph, eased) => {
                 this.clickAble = false
                 const rectMatrix = this.rect.transform()
                 const inputLength = ( this.index +(index-this.index)*eased)/(devide-1) * length
@@ -99,7 +99,7 @@ class Addition extends Component {
       imgArr = posArr.map((p,index)=>({ initAttr: { center: [ p.x-26, p.y-26 ], fill : 'rgba(0,0,0,0)', load: Dot } }))
     }
     return (<Group __parent__= {this.props.__parent__} >
-      
+      <Rect __parent__ = { this.__parent__ } events={ this.RectEvents } initConfig={ rectConfig }/>
       { this.rect!=undefined ? imgArr.map((imgConfig,i)=><Image initConfig={ imgConfig } events={{ created:(ins)=>{ this.imgIns.push(ins) } }}/> ) : null }
       { this.rect!=undefined ? rectConfigArr.map((r,i)=>(<Rect initConfig={ r } events={ eventsArr[i] }/>)) : null }
     </Group>)
@@ -110,6 +110,7 @@ class Addition extends Component {
       this.clickAble = true
     }, 4000)
     //expose imgIns rectIns and PicIns
+    console.log(this.imgIns)
     if(this.props.events&&this.props.events.created)
       this.props.events.created({ imgIns:this.imgIns, rectIns: this.rectIns, rectPicIns: this.rectPicIns })
   }
