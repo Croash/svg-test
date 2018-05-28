@@ -139,7 +139,7 @@ class MoveIcon extends Component {
         center: [ rectPos.x,rectPos.y ] 
       } 
     }
-    return <Ellipse __parent__ = { this.__parent__ } events={ this.RectEvents } initConfig={ rectConfig }/>
+    return <Rect __parent__ = { this.__parent__ } events={ this.RectEvents } initConfig={ rectConfig }/>
   }
 }
 
