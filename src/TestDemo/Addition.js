@@ -6,7 +6,7 @@ import utils from './utils'
 import { vec2 } from 'gl-matrix'
 const { angle, vec2GetPoint } = utils
 const { Group } = Containers
-const { Rect, Path, Image, Circle, Ellipse } = Elements
+const { Rect, Path, Image, Circle, Ellipse, Text } = Elements
 const singleAngle = 2.120077582553386
 
 const rotateCal = (circleCenter,startPoint,endPoint) => {
@@ -60,13 +60,26 @@ class Addition extends Component {
         center: [ rectPos.x,rectPos.y ] 
       } 
     }
-    
+    const textConfig = []
     let pathInitPos = this.path.pointAt(0)
     let matrixPos = new SVG.Matrix()
     const posArr = []
     for(let i=0;i<devide;i++) {
       const pos = vec2GetPoint(matrixPos.rotate(singleAngle*i,...this.circleCenter), [ pathInitPos.x, pathInitPos.y ] )
       posArr.push(pos)
+      textConfig.push({
+        initAttr: { 
+          // center: [ pos.x, pos.y ], 
+          // size:[ 80,80 ], 
+          fill : 'white',
+          font: {
+            family:   'Helvetica',
+            size:     144,
+            anchor:   'middle',
+            leading:  '1.5em'
+          }
+        } 
+      })
     }
     const rectFormerConfig = []
     const rectLatterConfig = []
@@ -138,7 +151,8 @@ class Addition extends Component {
       { this.rect!=undefined ? rectConfigArr.map((r,i)=>(<Rect initConfig={ r } events={ eventsArr[i] }/>)) : null }
       { this.rect!=undefined ? rectFormerConfig.map((r,i)=>(<Rect initConfig={ r } events={{ created:(ins)=>{ this.rectIns.push(ins) } }}/>)) : null }
       { this.rect!=undefined ? rectLatterConfig.map((r,i)=>(<Rect initConfig={ r } events={{ created:(ins)=>{ this.rectIns.push(ins) } }}/>)) : null }
-    </Group>)
+      { this.rect!=undefined ? textConfig.map((r,i)=>(<Text initConfig={ r } />)) : null  }
+      </Group>)
   }  
   
   componentDidMount() {
