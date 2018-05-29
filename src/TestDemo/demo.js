@@ -40,6 +40,9 @@ class GComp extends Component {
     }
     this.circleCenter = [ 970, 6540 ]
     this.r = 6500
+    const { leftConstrain = 3, rightConstrain = 3 } = props
+    this.leftDragConstrain = leftConstrain
+    this.rightDragConstrain = rightConstrain
   }
   componentDidMount() {
 
@@ -98,8 +101,12 @@ class GComp extends Component {
           vectorE = { x: end.x - this.circleCenter[0], y: end.y - this.circleCenter[1] }
         this.__rotate__ += angle(vectorS,vectorE)
         
-        if(3*singleAngle<Math.abs(this.__rotate__))
-          this.__rotate__ = this.__rotate__/Math.abs(this.__rotate__)*3*singleAngle
+        if(this.__rotate__<=0) {
+          if(this.leftDragConstrain*singleAngle<Math.abs(this.__rotate__))
+            this.__rotate__ = this.__rotate__/Math.abs(this.__rotate__)*this.leftDragConstrain*singleAngle
+        }
+        else if(this.rightDragConstrain*singleAngle<Math.abs(this.__rotate__))
+          this.__rotate__ = this.__rotate__/Math.abs(this.__rotate__)*this.rightDragConstrain*singleAngle
 
         this.CustomRotate(e,ins,this.__rotate__,this.imgIns,this.rectIns,this.rectPicIns,this.imgInsMatrix,this.rectInsMatrix,this.rectPicInsMatrix)
         this.__points__ = { ...end }
@@ -135,8 +142,8 @@ class GComp extends Component {
             
           })
       }
-      // this.__dragMove__ = 0
       this.__points__ = null
+      this.__dragMove__ = 0
       // window.__btnClickable__ = true
       // console.log('end')
     }

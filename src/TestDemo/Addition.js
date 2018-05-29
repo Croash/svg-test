@@ -25,6 +25,7 @@ class Addition extends Component {
     }
     this.imgIns = []
     this.rectIns = []
+    this.sideRectIns = []
     this.rectPicIns = []
     this.circleCenter = [ 970, 6540 ]
     this.rect = props.rect
@@ -120,13 +121,19 @@ class Addition extends Component {
         }
       }))
       imgArr = posArr.map((p,index)=>({ initAttr: { center: [ p.x-26, p.y-26 ], fill : 'rgba(0,0,0,0)', load: Dot } }))
+      for(let i=1;i<=3;i++) {
+        let formerPos = vec2GetPoint(matrixPos.rotate(-singleAngle*i,...this.circleCenter), [ posArr[0].x, posArr[0].y ] )
+        let latterPos = vec2GetPoint(matrixPos.rotate(singleAngle*i,...this.circleCenter), [ posArr[posArr.length-1].x, posArr[posArr.length-1].y ] )
+        imgArr.push( { initAttr: { center: [ formerPos.x-26, formerPos.y-26 ], fill : 'rgba(0,0,0,0)', load: Dot } })
+        imgArr.push( { initAttr: { center: [ latterPos.x-26, latterPos.y-26 ], fill : 'rgba(0,0,0,0)', load: Dot } })
+      }
     }
     return (<Group __parent__= {this.props.__parent__} >
       <Rect __parent__ = { this.__parent__ } events={ this.RectEvents } initConfig={ rectConfig }/>
       { this.rect!=undefined ? imgArr.map((imgConfig,i)=><Image initConfig={ imgConfig } events={{ created:(ins)=>{ this.imgIns.push(ins) } }}/> ) : null }
       { this.rect!=undefined ? rectConfigArr.map((r,i)=>(<Rect initConfig={ r } events={ eventsArr[i] }/>)) : null }
-      { this.rect!=undefined ? rectFormerConfig.map((r,i)=>(<Rect initConfig={ r } />)) : null }
-      { this.rect!=undefined ? rectLatterConfig.map((r,i)=>(<Rect initConfig={ r } />)) : null }
+      { this.rect!=undefined ? rectFormerConfig.map((r,i)=>(<Rect initConfig={ r } events={{ created:(ins)=>{ this.rectIns.push(ins) } }}/>)) : null }
+      { this.rect!=undefined ? rectLatterConfig.map((r,i)=>(<Rect initConfig={ r } events={{ created:(ins)=>{ this.rectIns.push(ins) } }}/>)) : null }
     </Group>)
   }  
   
@@ -136,8 +143,13 @@ class Addition extends Component {
     }, 4000)
     //expose imgIns rectIns and PicIns
     console.log(this.imgIns)
-    if(this.props.events&&this.props.events.created)
-      this.props.events.created({ imgIns:this.imgIns, rectIns: this.rectIns, rectPicIns: this.rectPicIns })
+    if(this.props.events&&this.props.events.created) {
+      // let l = [ ...this.rectIns, ...this.sideRectIns ]
+      // console.log([ ...this.rectIns ],this.rectIns)
+      let arr = [ 1,2,3 ]
+      console.log([ ...arr ],this.rectIns.length)
+      this.props.events.created({ imgIns:this.imgIns, rectIns: this.rectIns/* , ...this.sideRectIns */ , rectPicIns: this.rectPicIns })
+    }
   }
 }
 
