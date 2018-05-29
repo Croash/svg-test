@@ -19,7 +19,7 @@ class Addition extends Component {
   constructor(props) {
     super(props)
     this.path = props.path
-    this.index = 0
+    // this.index = 0
     this.state = {
       rectInit: false
     }
@@ -29,6 +29,15 @@ class Addition extends Component {
     this.circleCenter = [ 970, 6540 ]
     this.rect = props.rect
     this.clickAble = false
+    this.rectIndex = props.rectIndex
+    this.index = props.rectIndex
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if( this.props.rectIndex != nextProps.rectIndex ) {
+      this.index += (nextProps.rectIndex - this.props.rectIndex)
+      console.log(this.index)
+    }
   }
 
   RectEvents = {
@@ -58,41 +67,55 @@ class Addition extends Component {
       const pos = vec2GetPoint(matrixPos.rotate(singleAngle*i,...this.circleCenter), [ pathInitPos.x, pathInitPos.y ] )
       posArr.push(pos)
     }
-    const rectConfigArr = posArr.map(p=>({ initAttr: { center: [ p.x, p.y ], size:[ 80,80 ], fill : 'rgba(0,0,0,0)', stroke: { color: 'white', width: 2 } } }))
+    const rectFormerConfig = []
+    const rectLatterConfig = []
+    for(let i=1;i<=3;i++) {
+      let formerPos = vec2GetPoint(matrixPos.rotate(-singleAngle*i,...this.circleCenter), [ posArr[0].x, posArr[0].y ] )
+      let latterPos = vec2GetPoint(matrixPos.rotate(singleAngle*i,...this.circleCenter), [ posArr[posArr.length-1].x, posArr[posArr.length-1].y ] )
+      rectFormerConfig.push( { initAttr: { center: [ formerPos.x, formerPos.y ], size:[ 80,80 ], fill : 'rgba(0,0,0,0)', stroke: { color: 'white', width: 2 } } } )
+      rectLatterConfig.push( { initAttr: { center: [ latterPos.x, latterPos.y ], size:[ 80,80 ], fill : 'rgba(0,0,0,0)', stroke: { color: 'white', width: 2 } } } )
+    }
+    const rectConfigArr = posArr.map(
+      p=>(
+        { initAttr: { center: [ p.x, p.y ], size:[ 80,80 ], fill : 'rgba(0,0,0,0)', stroke: { color: 'white', width: 2 } } }
+      )
+    )
     let eventsArr = []
     let imgArr = []
     if(this.rect!=undefined) {
       eventsArr = posArr.map((pos,index)=>({
         created:(ins)=>{ this.rectIns.push(ins) },
         click:(e,ins)=>{
-          let angle = 0
+          const { rectIndex = 0 } = this.props
+          let angleInside = 0
           let increaseAngle = 0
-          // console.log(this.rect.attr())
           let startLen = ( this.index +(index-this.index)*0)/(devide-1) * length
           let startPoint = this.path.pointAt(startLen)
-          console.log('gg',window.__btnClickable__)
+          const rectMatrix = this.rect.transform()
+          // console.log('gg',window.__btnClickable__)
           if(this.clickAble&&window.__btnClickable__/* &&window.__dragClick__ */)
-            this.rect
+            this.rect 
               .animate(300)
               .during((pos, morph, eased) => {
                 this.clickAble = false
-                const rectMatrix = this.rect.transform()
                 const inputLength = ( this.index +(index-this.index)*eased)/(devide-1) * length
                 let p = this.path.pointAt(inputLength)
                 const matrix = new SVG.Matrix()
-                angle = rotateCal(this.circleCenter,startPoint,p)
-                increaseAngle += angle
+                angleInside = rotateCal(this.circleCenter,startPoint,p)
+                increaseAngle += angleInside
+                // let input = increaseAngle+ rectIndex* singleAngle *eased
+                console.log(rectIndex,this.index,increaseAngle)
                 this.rect
                   .matrix(rectMatrix)
                   .transform(
-                    matrix.rotate(angle,...this.circleCenter),
-                    true )
+                    matrix.rotate(increaseAngle,...this.circleCenter),
+                    true )  
                 startPoint = p
               })
             .after(()=>{
-              console.log('ggclick',window.__btnClickable__)
+              // console.log('ggclick',window.__btnClickable__)
               this.clickAble = true
-              this.index = index
+              this.index = index/* +this.index */
             })
         }
       }))
@@ -102,6 +125,8 @@ class Addition extends Component {
       <Rect __parent__ = { this.__parent__ } events={ this.RectEvents } initConfig={ rectConfig }/>
       { this.rect!=undefined ? imgArr.map((imgConfig,i)=><Image initConfig={ imgConfig } events={{ created:(ins)=>{ this.imgIns.push(ins) } }}/> ) : null }
       { this.rect!=undefined ? rectConfigArr.map((r,i)=>(<Rect initConfig={ r } events={ eventsArr[i] }/>)) : null }
+      { this.rect!=undefined ? rectFormerConfig.map((r,i)=>(<Rect initConfig={ r } />)) : null }
+      { this.rect!=undefined ? rectLatterConfig.map((r,i)=>(<Rect initConfig={ r } />)) : null }
     </Group>)
   }  
   

@@ -54,56 +54,59 @@ import SVG from 'svg.js'
     }
     var _this = this
 
-    // fire beforedrag event
-    this.el.fire('beforedrag', { event: e, handler: this })
+    if(window.__dragable__) {
 
-    // search for parent on the fly to make sure we can call
-    // draggable() even when element is not in the dom currently
-    this.parent = this.parent || this.el.parent(SVG.Nested) || this.el.parent(SVG.Doc)
-    this.p = this.parent.node.createSVGPoint()
+      // fire beforedrag event
+      this.el.fire('beforedrag', { event: e, handler: this })
 
-    // save current transformation matrix
-    this.m = this.el.node.getScreenCTM().inverse()
+      // search for parent on the fly to make sure we can call
+      // draggable() even when element is not in the dom currently
+      this.parent = this.parent || this.el.parent(SVG.Nested) || this.el.parent(SVG.Doc)
+      this.p = this.parent.node.createSVGPoint()
 
-    var box = this.getBBox()
-    
-    var anchorOffset;
-    
-    // fix text-anchor in text-element (#37)
-    if(this.el instanceof SVG.Text){
-      anchorOffset = this.el.node.getComputedTextLength();
-        
-      switch(this.el.attr('text-anchor')){
-        case 'middle':
-          anchorOffset /= 2;
-          break
-        case 'start':
-          anchorOffset = 0;
-          break;
+      // save current transformation matrix
+      this.m = this.el.node.getScreenCTM().inverse()
+
+      var box = this.getBBox()
+      
+      var anchorOffset;
+      
+      // fix text-anchor in text-element (#37)
+      if(this.el instanceof SVG.Text){
+        anchorOffset = this.el.node.getComputedTextLength();
+          
+        switch(this.el.attr('text-anchor')){
+          case 'middle':
+            anchorOffset /= 2;
+            break
+          case 'start':
+            anchorOffset = 0;
+            break;
+        }
       }
+      
+      this.startPoints = {
+        // We take absolute coordinates since we are just using a delta here
+        point: this.transformPoint(e, anchorOffset),
+        box:   box,
+        transform: this.el.transform()
+      }
+      
+      // add drag and end events to window
+      SVG.on(window, 'mousemove.drag', function(e){ _this.drag(e) })
+      SVG.on(window, 'touchmove.drag', function(e){ _this.drag(e) })
+      SVG.on(window, 'mouseup.drag', function(e){ _this.end(e) })
+      SVG.on(window, 'touchend.drag', function(e){ _this.end(e) })
+
+      // fire dragstart event
+      this.el.fire('dragstart', {event: e, p: this.startPoints.point, m: this.m, handler: this})
+
+      // prevent browser drag behavior
+      e.preventDefault()
+
+      // prevent propagation to a parent that might also have dragging enabled
+      e.stopPropagation();
     }
-    
-    this.startPoints = {
-      // We take absolute coordinates since we are just using a delta here
-      point: this.transformPoint(e, anchorOffset),
-      box:   box,
-      transform: this.el.transform()
-    }
-    
-    // add drag and end events to window
-    SVG.on(window, 'mousemove.drag', function(e){ _this.drag(e) })
-    SVG.on(window, 'touchmove.drag', function(e){ _this.drag(e) })
-    SVG.on(window, 'mouseup.drag', function(e){ _this.end(e) })
-    SVG.on(window, 'touchend.drag', function(e){ _this.end(e) })
-
-    // fire dragstart event
-    this.el.fire('dragstart', {event: e, p: this.startPoints.point, m: this.m, handler: this})
-
-    // prevent browser drag behavior
-    e.preventDefault()
-
-    // prevent propagation to a parent that might also have dragging enabled
-    e.stopPropagation();
   }
 
   // while dragging

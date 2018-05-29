@@ -35,7 +35,8 @@ class GComp extends Component {
     this.index = 0
     this.state = {
       pathInit: false,
-      groupInit: false
+      groupInit: false,
+      rectIndex: 0
     }
     this.circleCenter = [ 970, 6540 ]
     this.r = 6500
@@ -58,14 +59,14 @@ class GComp extends Component {
       this.group = group
       this.groupCenter = []
       this.group.draggable()
-      this.dragable = true
+      window.__dragable__ = true
       window.__btnClickable__ = true
       this.__dragMove__ = 0
       this.__rotate__ = 0
     },
     beforedrag: (e) => {
-      console.log(this.__dragMove__,this.dragable)
-      if((this.__dragMove__ == 0||this.__dragMove__ == 1)&&this.dragable) {
+      if((this.__dragMove__ <= 4 )&&window.__dragable__) {
+        console.log('before',this.rectPicIns[0].transform())
         this.rectIns.map((rect,index)=>{
           this.rectInsMatrix[index] = rect.transform()
         })
@@ -90,7 +91,7 @@ class GComp extends Component {
     },
     customdrag: (e,ins) => {
       const{ start, end } = e.detail
-      if(this.__dragMove__ > 4 && this.dragable ) {
+      if(this.__dragMove__ > 4 && window.__dragable__ ) {
         if(!this.__points__) 
           this.__points__ = { ...start }
         const vectorS = { x: this.__points__.x - this.circleCenter[0], y: this.__points__.y - this.circleCenter[1] },
@@ -107,27 +108,30 @@ class GComp extends Component {
     dragend: (e,ins) => {
       let left = this.__rotate__-Math.round(this.__rotate__/singleAngle)*singleAngle
       // this.__dragMove__ = 0
-      console.log(this.__dragMove__,this.dragable,this.dragable&&this.__dragMove__ >4)
-      if(this.dragable&&this.__dragMove__ >4 ) {
-        console.log(this.__dragMove__,this.dragable,this.dragable&&this.__dragMove__ >4)
-        this.path.animate(2300)
+      if(window.__dragable__&&this.__dragMove__ >4 ) {
+        this.path.animate(400)
           .during((pos, morph, eased) => { 
             // this.__dragMove__ = 0
-            this.dragable = false
+            window.__dragable__ = false
             // console.log(this.__dragMove__)
-            this.dragable = false
+            window.__dragable__ = false
             this.CustomRotate(e,ins,this.__rotate__-left*eased,this.imgIns,this.rectIns,this.rectPicIns,this.imgInsMatrix,this.rectInsMatrix,this.rectPicInsMatrix)
           })
           .after(()=>{
-            console.log('no rotate',this.__dragMove__,this.dragable)
+            // console.log('no rotate',(this.__rotate__-left)/singleAngle)
+            const rectRotate = (this.__rotate__-left)
             let matrix = new SVG.Matrix()
             this.CustomRotate(e,ins,0,this.imgIns,this.rectIns,this.rectPicIns,this.imgInsMatrix,this.rectInsMatrix,this.rectPicInsMatrix)
+            this.rectPicIns[0].matrix(this.rectPicInsMatrix[0]).transform(matrix.rotate(rectRotate,...this.circleCenter/* +rect.attr().width/2 */), true)
+            console.log(rectRotate/singleAngle)
+            window.__dragable__ = true
+            this.__dragMove__ = 0
+            this.setState({ rectIndex: this.state.rectIndex + Math.round(rectRotate/singleAngle) })
             setTimeout(() => {
               window.__btnClickable__ = true
               
-            }, 500)
-            this.dragable = true
-            this.__dragMove__ = 0
+            }, 0)
+
             
           })
       }
@@ -171,13 +175,14 @@ class GComp extends Component {
         //   }}/>:null }
   render() {
     const pathConfig = { initAttr: { plot:bezierFunc(points), stroke: { width:6, color:'red' } } }
-
+    console.log(this.state.rectIndex)
     return (
       <Group __parent__= {this.props.__parent__}>
 
         <Group  events = {this.GroupEvents}>
           <Path events={ this.PathEvents } initConfig = { pathConfig } />
           { (this.path!=undefined) ? <Addition {...this.props} path={this.path} 
+              rectIndex = { this.state.rectIndex }
               events={{ created:(insObj)=>{
                 this.imgIns=insObj.imgIns
                 this.rectIns=insObj.rectIns
