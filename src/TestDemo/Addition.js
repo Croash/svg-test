@@ -87,11 +87,14 @@ class Addition extends Component {
       eventsArr = posArr.map((pos,index)=>({
         created:(ins)=>{ this.rectIns.push(ins) },
         click:(e,ins)=>{
+          let matrixBase = new SVG.Matrix()
           const { rectIndex = 0 } = this.props
           let angleInside = 0
           let increaseAngle = 0
-          let startLen = ( this.index +(index-this.index)*0)/(devide-1) * length
-          let startPoint = this.path.pointAt(startLen)
+          let startLen = ( this.index )/(devide-1) * length
+          // let startPoint = this.path.pointAt(startLen)
+          let startPoint = vec2GetPoint(matrixBase.rotate(singleAngle*this.index,...this.circleCenter), [ posArr[0].x, posArr[0].y ])
+          // console.log(gg,startPoint)
           const rectMatrix = this.rect.transform()
           // console.log('gg',window.__btnClickable__)
           if(this.clickAble&&window.__btnClickable__/* &&window.__dragClick__ */)
@@ -99,8 +102,9 @@ class Addition extends Component {
               .animate(300)
               .during((pos, morph, eased) => {
                 this.clickAble = false
-                const inputLength = ( this.index +(index-this.index)*eased)/(devide-1) * length
-                let p = this.path.pointAt(inputLength)
+                // const inputLength = ( this.index +(index-this.index)*eased)/(devide-1) * length
+                // let p = this.path.pointAt(inputLength)
+                let p = vec2GetPoint(matrixBase.rotate(singleAngle* ( this.index +(index-this.index)*eased),...this.circleCenter), [ posArr[0].x, posArr[0].y ])
                 const matrix = new SVG.Matrix()
                 angleInside = rotateCal(this.circleCenter,startPoint,p)
                 increaseAngle += angleInside
@@ -144,8 +148,6 @@ class Addition extends Component {
     //expose imgIns rectIns and PicIns
     console.log(this.imgIns)
     if(this.props.events&&this.props.events.created) {
-      // let l = [ ...this.rectIns, ...this.sideRectIns ]
-      // console.log([ ...this.rectIns ],this.rectIns)
       let arr = [ 1,2,3 ]
       console.log([ ...arr ],this.rectIns.length)
       this.props.events.created({ imgIns:this.imgIns, rectIns: this.rectIns/* , ...this.sideRectIns */ , rectPicIns: this.rectPicIns })
