@@ -79,6 +79,9 @@ class GComp extends Component {
         this.imgIns.map((img,index)=>{
           this.imgInsMatrix[index] = img.transform()
         })
+        this.textIns.map((text,index)=>{
+          this.textInsMatrix[index] = text.transform()
+        })
         this.__rotate__ = 0
       }
       this.__rotate__ = 0
@@ -173,6 +176,12 @@ class GComp extends Component {
       //   .transform(matrix.rotate(rotateAngle,...this.circleCenter/* +rect.attr().width/2 */), true)
       // rect.matrix(matrixRect).transform(matrix.rotate(-rotateAngle,rect.attr().cx(),rect.attr().cy()/* +rect.attr().width/2 */), true)
     })
+
+    this.textIns.map((text,index)=>{
+      const matrixRect = rectInsMatrix[index]/* new SVG.Matrix() */
+      text.matrix(matrixRect).transform(matrix.rotate(-rotateAngle,text.attr().x/* +text.attr().width/2 */,text.attr().y-20/* +text.attr().width/2 */), true)
+    })
+
   }
         // { this.path!=undefined? <MoveIcon path={ this.path } 
         //   events = {{ created:(MoveIcon) => { 
@@ -194,9 +203,11 @@ class GComp extends Component {
                 this.imgIns=insObj.imgIns
                 this.rectIns=insObj.rectIns
                 this.rectPicIns=insObj.rectPicIns
+                this.textIns = insObj.textIns
                 this.imgInsMatrix = []
                 this.rectInsMatrix = []
                 this.rectPicInsMatrix = []
+                this.textInsMatrix = []
                 this.rectIns.map((rect,index)=>{
                   this.rectInsMatrix[index] = rect.transform()
                 })
@@ -205,6 +216,9 @@ class GComp extends Component {
                 })
                 this.rectPicIns.map((rect,index)=>{
                   this.rectPicInsMatrix[index] = rect.transform()
+                })
+                this.textIns.map((text,index)=>{
+                  this.textInsMatrix[index] = text.transform()
                 })
               } }}
               rect = { this.MoveIcon }

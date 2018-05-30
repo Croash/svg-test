@@ -27,6 +27,7 @@ class Addition extends Component {
     this.rectIns = []
     this.sideRectIns = []
     this.rectPicIns = []
+    this.textIns = []
     this.circleCenter = [ 970, 6540 ]
     this.rect = props.rect
     this.clickAble = false
@@ -60,7 +61,7 @@ class Addition extends Component {
         center: [ rectPos.x,rectPos.y ] 
       } 
     }
-    const textConfig = []
+    let textConfig = []
     let pathInitPos = this.path.pointAt(0)
     let matrixPos = new SVG.Matrix()
     const posArr = []
@@ -69,18 +70,20 @@ class Addition extends Component {
       posArr.push(pos)
       textConfig.push({
         initAttr: { 
-          // center: [ pos.x, pos.y ], 
+          center: [ pos.x/* -30 */, pos.y+20 ], 
           // size:[ 80,80 ], 
           fill : 'white',
-          font: {
+          font: { 
             family:   'Helvetica',
-            size:     144,
+            size:     35,
             anchor:   'middle',
             leading:  '1.5em'
-          }
+          },
+          'text':'ggwp'
         } 
       })
     }
+    console.log(textConfig)
     const rectFormerConfig = []
     const rectLatterConfig = []
     for(let i=1;i<=3;i++) {
@@ -138,12 +141,44 @@ class Addition extends Component {
         }
       }))
       imgArr = posArr.map((p,index)=>({ initAttr: { center: [ p.x-26, p.y-26 ], fill : 'rgba(0,0,0,0)', load: Dot } }))
+      let leftSideText = []
+      let rightSideText = []
       for(let i=1;i<=3;i++) {
         let formerPos = vec2GetPoint(matrixPos.rotate(-singleAngle*i,...this.circleCenter), [ posArr[0].x, posArr[0].y ] )
         let latterPos = vec2GetPoint(matrixPos.rotate(singleAngle*i,...this.circleCenter), [ posArr[posArr.length-1].x, posArr[posArr.length-1].y ] )
         imgArr.push( { initAttr: { center: [ formerPos.x-26, formerPos.y-26 ], fill : 'rgba(0,0,0,0)', load: Dot } })
         imgArr.push( { initAttr: { center: [ latterPos.x-26, latterPos.y-26 ], fill : 'rgba(0,0,0,0)', load: Dot } })
+        leftSideText.push({
+          initAttr: { 
+            center: [ formerPos.x/* -30 */, formerPos.y+20 ], 
+            // size:[ 80,80 ], 
+            fill : 'white',
+            font: { 
+              family:   'Helvetica',
+              size:     35,
+              anchor:   'middle',
+              leading:  '1.5em'
+            },
+            'text':`ggwp-${i}`
+          } 
+        })
+        rightSideText.push({
+          initAttr: { 
+            center: [ latterPos.x/* -30 */, latterPos.y+20 ], 
+            // size:[ 80,80 ], 
+            fill : 'white',
+            font: { 
+              family:   'Helvetica',
+              size:     35,
+              anchor:   'middle',
+              leading:  '1.5em'
+            },
+            'text':`ggwp+${i}`
+          } 
+        })
       }
+
+      textConfig = [ ...leftSideText.reverse(), ...textConfig, ...rightSideText ]
     }
     return (<Group __parent__= {this.props.__parent__} >
       <Rect __parent__ = { this.__parent__ } events={ this.RectEvents } initConfig={ rectConfig }/>
@@ -151,7 +186,7 @@ class Addition extends Component {
       { this.rect!=undefined ? rectConfigArr.map((r,i)=>(<Rect initConfig={ r } events={ eventsArr[i] }/>)) : null }
       { this.rect!=undefined ? rectFormerConfig.map((r,i)=>(<Rect initConfig={ r } events={{ created:(ins)=>{ this.rectIns.push(ins) } }}/>)) : null }
       { this.rect!=undefined ? rectLatterConfig.map((r,i)=>(<Rect initConfig={ r } events={{ created:(ins)=>{ this.rectIns.push(ins) } }}/>)) : null }
-      { this.rect!=undefined ? textConfig.map((r,i)=>(<Text initConfig={ r } />)) : null  }
+      { this.rect!=undefined ? textConfig.map((r,i)=>(<Text initConfig={ r } events={{ created:(ins)=>{ this.textIns.push(ins) } }} />)) : null  }
       </Group>)
   }  
   
@@ -164,7 +199,7 @@ class Addition extends Component {
     if(this.props.events&&this.props.events.created) {
       let arr = [ 1,2,3 ]
       console.log([ ...arr ],this.rectIns.length)
-      this.props.events.created({ imgIns:this.imgIns, rectIns: this.rectIns/* , ...this.sideRectIns */ , rectPicIns: this.rectPicIns })
+      this.props.events.created({ imgIns:this.imgIns, rectIns: this.rectIns/* , ...this.sideRectIns */ , rectPicIns: this.rectPicIns, textIns: this.textIns })
     }
   }
 }
