@@ -1,6 +1,5 @@
 import React,{ Component } from 'react'
 import SVG from 'svg.js'
-import navline from './img/navline.png'
 
 const bezierFunc = (points) => {
   return `M${points[0].x} ${points[0].y} 

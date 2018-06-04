@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import SVG from 'svg.js'
-import Containers from '../Components/Containers'
-import Elements from '../Components/Elements'
+import { Containers,Elements } from 'react-svg.js'
 import updateBase from './function'
 const { Canvas, Group } = Containers
 const { Rect, Path, Image, Circle, Line } = Elements
